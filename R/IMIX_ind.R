@@ -1,7 +1,8 @@
 #' @title IMIX-ind
 #' @description Fitting an independent mixture model with restrictions on mean and variance. Input of summary statistics z scores of two or three data types.
 #'
-#' @param data_input An n x d data frame or matrix of the summary statistics z score, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+#' @param data_input An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+#' @param data_type Whether the input data is the p values or z scores, default is p value
 #' @param mu Initial value for the mean of each component of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format that corresponds to the initial value of mu, for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
 #' @param sigma Initial value for the standard deviation of each component of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format that corresponds to the initial value of mu, for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
 #' @param p Initial value for the proportion of the distribution in the Gaussian mixture model
@@ -12,7 +13,8 @@
 #' @return The results of IMIX-ind
   #' @export
 
-IMIX_ind=function(data_input, #An n x d data frame or matrix of the summary statistics z score, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+IMIX_ind=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+                  data_type=c("p","z"), #Whether the input data is the p values or z scores, default is p value
                   mu, #Initial value for the mean of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format that corresponds to the initial value of mu, for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
                   sigma, #Initial value for the standard deviation of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format that corresponds to the initial value of mu, for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
                   p, #Initial value for the proportion of the distribution in the Gaussian mixture model
@@ -21,11 +23,20 @@ IMIX_ind=function(data_input, #An n x d data frame or matrix of the summary stat
                   seed=10,#set.seed, default is 10
                   verbose=FALSE #Whether to print the full log-likelihood for each iteration, default is FALSE
                   ){
-  set.seed(seed)
+  
+  
+  data_type <- match.arg(data_type)
+  if(data_type=="p"){data_input=apply(data_input,2,function(x) qnorm(x,lower.tail=F))}
+  
+
 
   n_data=dim(data_input)[2]
   if(length(sigma)!=2*n_data | length(mu)!=2*n_data | length(p)!=(2^n_data) ) {cat(crayon::red("Error: The dimensions of initial values don't match with each other!")); return(1)}
 
+  
+  set.seed(seed)
+  
+  
   cat(crayon::cyan$bold("Start IMIX-ind procedure!\n"))
 
   # modified sum only considers finite values

@@ -1,7 +1,8 @@
 #' @title IMIX-cor-restrict
 #' @description Fitting a correlated multivariate mixture model with restrictions on the mean. Input of summary statistics z scores of two or three data types.
 #'
-#' @param data_input An n x d data frame or matrix of the summary statistics z score, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+#' @param data_input An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+#' @param data_type Whether the input data is the p values or z scores, default is p value
 #' @param mu Initial value for the mean of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format that corresponds to the initial value of mu, for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
 #' @param cov A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.
 #' @param p Initial value for the proportion of the distribution in the Gaussian mixture model
@@ -13,7 +14,8 @@
   #' @export
 
 #Only specifies the mu, let the sigmas be unconstrained
-IMIX_cor_restrict=function(data_input, #An n x d data frame or matrix of the summary statistics z score, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+IMIX_cor_restrict=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+                           data_type=c("p","z"), #Whether the input data is the p values or z scores, default is p value
                            mu, #Initial value for the mean of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format that corresponds to the initial value of mu, for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
                            cov, #A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.
                            p, #Initial value for the proportion of the distribution in the Gaussian mixture model. A vector of length 2^d, d is the number of data types.
@@ -22,15 +24,19 @@ IMIX_cor_restrict=function(data_input, #An n x d data frame or matrix of the sum
                            seed=10,#set.seed, default is 10
                            verbose=FALSE #Whether to print the full log-likelihood for each iteration, default is FALSE
 ){
-  set.seed(seed)
 
-
+  data_type <- match.arg(data_type)
+  if(data_type=="p"){data_input=apply(data_input,2,function(x) qnorm(x,lower.tail=F))}
+  
 
   n_data=dim(data_input)[2]
   if(length(cov)!=2^n_data | length(mu)!=2*n_data | length(p)!=(2^n_data) | dim(cov[[1]])[1]!=n_data | dim(cov[[1]])[2]!=n_data ) {cat(crayon::red("Error: The dimensions of initial values don't match with each other!")); return(1)}
   for(i in 2:(2^n_data)) {
     if(dim(cov[[i]])[1]!=dim(cov[[i]])[2] | dim(cov[[i]])[1]!=n_data )  {cat(crayon::red("Error: The dimensions of initial values don't match with each other!")); return(1)}
   }
+  
+  set.seed(seed)
+  
   cat(crayon::cyan$bold("Start IMIX-cor-restrict procedure!\n"))
 
   # modified sum only considers finite values

@@ -1,7 +1,8 @@
 #' @title IMIX
 #' @description Fitting a multivariate mixture model framework, model selection for the best model, and adaptive procedure for FDR control. Input of summary statistics z scores of two or three data types.
 #'
-#' @param data_input An n x d data frame or matrix of the summary statistics z score, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+#' @param data_input An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+#' @param data_type Whether the input data is the p values or z scores, default is p value
 #' @param mu_ini Initial value for the mean of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format that corresponds to the initial value of mu, for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
 #' @param cov_ini A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.
 #' @param p_ini Initial value for the proportion of the distribution in the Gaussian mixture model. A vector of length 2^d, d is the number of data types.
@@ -16,7 +17,8 @@
 #' @return The results of IMIX
 #' @export
 
-IMIX=function(data_input, #An n x d data frame or matrix of the summary statistics z score, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+IMIX=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+              data_type=c("p","z"), #Whether the input data is the p values or z scores, default is p value
               mu_ini, #Initial value for the mean of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format that corresponds to the initial value of mu, for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
               cov_ini, #A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.
               p_ini, #Initial value for the proportion of the distribution in the Gaussian mixture model. A vector of length 2^d, d is the number of data types.
@@ -29,8 +31,10 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
               alpha=0.2, #Prespecified nominal level for global FDR control, default is 0.2
               verbose=FALSE #Whether to print the full log-likelihood for each iteration, default is FALSE
 ){
-
-  model <- match.arg(model)
+  data_type <- match.arg(data_type)
+  if(data_type=="p"){data_input=apply(data_input,2,function(x) qnorm(x,lower.tail=F))}
+ 
+   model <- match.arg(model)
   model_selection_method <- match.arg(model_selection_method)
 
   g=2^(dim(data_input)[2]) #Number of components
@@ -120,7 +124,7 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
 
   }
 
-  IMIX_ind_output=IMIX_ind(data_input,mu=mu_ini1,sigma=sigma_ini1,p=p,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+  IMIX_ind_output=IMIX_ind(data_input,data_type="z",mu=mu_ini1,sigma=sigma_ini1,p=p,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
  if(model=="IMIX_ind") {
    IMIX_cor_twostep_output=NULL
    IMIX_cor_output=NULL
@@ -177,42 +181,42 @@ p_ind=IMIX_ind_output$pi
   if(ini.ind==TRUE){
 
   if(model=="IMIX_cor_twostep"){
-  IMIX_cor_twostep_output=IMIX_cor_twostep(data_input,mu_vec=mu_vec_ind,cov=cov_ind,p=p_ind,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+  IMIX_cor_twostep_output=IMIX_cor_twostep(data_input,data_type="z",mu_vec=mu_vec_ind,cov=cov_ind,p=p_ind,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
   IMIX_cor_restrict_output=NULL
   IMIX_cor_output=NULL
   } else if (model=="IMIX_cor"){
-    IMIX_cor_output=IMIX_cor(data_input,mu_vec=mu_vec_ind,cov=cov_ind,p=p_ind,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+    IMIX_cor_output=IMIX_cor(data_input,data_type="z",mu_vec=mu_vec_ind,cov=cov_ind,p=p_ind,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
     IMIX_cor_restrict_output=NULL
     IMIX_cor_twostep_output=NULL
     } else if (model=="IMIX_cor_restrict"){
-    IMIX_cor_restrict_output=IMIX_cor_restrict(data_input,mu=IMIX_ind_output$mu,cov=cov_ind,p=p_ind,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+    IMIX_cor_restrict_output=IMIX_cor_restrict(data_input,data_type="z",mu=IMIX_ind_output$mu,cov=cov_ind,p=p_ind,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
     IMIX_cor_twostep_output=NULL
     IMIX_cor_output=NULL
     } else {
-      IMIX_cor_twostep_output=IMIX_cor_twostep(data_input,mu_vec=mu_vec_ind,cov=cov_ind,p=p_ind,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
-      IMIX_cor_output=IMIX_cor(data_input,mu_vec=mu_vec_ind,cov=cov_ind,p=p_ind,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
-      IMIX_cor_restrict_output=IMIX_cor_restrict(data_input,mu=IMIX_ind_output$mu,cov=cov_ind,p=p_ind,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+      IMIX_cor_twostep_output=IMIX_cor_twostep(data_input,data_type="z",mu_vec=mu_vec_ind,cov=cov_ind,p=p_ind,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+      IMIX_cor_output=IMIX_cor(data_input,data_type="z",mu_vec=mu_vec_ind,cov=cov_ind,p=p_ind,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+      IMIX_cor_restrict_output=IMIX_cor_restrict(data_input,data_type="z",mu=IMIX_ind_output$mu,cov=cov_ind,p=p_ind,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
 
     }
 
 } else {
 
     if(model=="IMIX_cor_twostep"){
-    IMIX_cor_twostep_output=IMIX_cor_two_step(data_input,mu_vec=mu_vec_ind,cov=cov,p=p,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+    IMIX_cor_twostep_output=IMIX_cor_two_step(data_input,data_type="z",mu_vec=mu_vec_ind,cov=cov,p=p,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
     IMIX_cor_restrict_output=NULL
     IMIX_cor_output=NULL
     } else if (model=="IMIX_cor"){
-   IMIX_cor_output=IMIX_cor(data_input,mu_vec=mu_vec,cov=cov,p=p,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+   IMIX_cor_output=IMIX_cor(data_input,data_type="z",mu_vec=mu_vec,cov=cov,p=p,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
    IMIX_cor_twostep_output=NULL
    IMIX_cor_restrict_output=NULL
    } else if (model=="IMIX_cor_restrict"){
-   IMIX_cor_restrict_output=IMIX_cor_restrict(data_input,mu=mu_ini1,cov=cov,p=p,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+   IMIX_cor_restrict_output=IMIX_cor_restrict(data_input,data_type="z",mu=mu_ini1,cov=cov,p=p,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
    IMIX_cor_twostep_output=NULL
    IMIX_cor_output=NULL
    } else {
-     IMIX_cor_twostep_output=IMIX_cor_two_step(data_input,mu_vec=mu_vec_ind,cov=cov,p=p,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
-     IMIX_cor_output=IMIX_cor(data_input,mu_vec=mu_vec,cov=cov,p=p,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
-     IMIX_cor_restrict_output=IMIX_cor_restrict(data_input,mu=mu_ini1,cov=cov,p=p,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+     IMIX_cor_twostep_output=IMIX_cor_two_step(data_input,data_type="z",mu_vec=mu_vec_ind,cov=cov,p=p,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+     IMIX_cor_output=IMIX_cor(data_input,data_type="z",mu_vec=mu_vec,cov=cov,p=p,g=g,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
+     IMIX_cor_restrict_output=IMIX_cor_restrict(data_input,data_type="z",mu=mu_ini1,cov=cov,p=p,tol=tol,maxiter=maxiter,seed=seed,verbose=verbose)
 
    }
 }

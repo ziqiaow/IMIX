@@ -1,7 +1,8 @@
 #' @title IMIX-cor
 #' @description Fitting a correlated multivariate mixture model. Input of summary statistics z scores of two or three data types.
 #'
-#' @param data_input An n x d data frame or matrix of the summary statistics z score, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+#' @param data_input An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+#' @param data_type Whether the input data is the p values or z scores, default is p value
 #' @param g The number of components, default is 8 for three data types
 #' @param mu_vec A list of initial values for the mean vectors for each component. If there are three data types and 8 components, then the initial is a list of 8 mean vectors, each vector is of length 3.
 #' @param cov A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.
@@ -14,7 +15,8 @@
 #' @export
 
 
-IMIX_cor=function(data_input, #An n x d data frame or matrix of the summary statistics z score, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+IMIX_cor=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
+                  data_type=c("p","z"), #Whether the input data is the p values or z scores, default is p value
                   g=8, #The number of components, default is 8 for three data types
                   mu_vec, #A list of initial values for the mean vectors for each component. If there are three data types and 8 components, then the initial is a list of 8 mean vectors, each vector is of length 3.
                   cov, #A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.
@@ -24,7 +26,10 @@ IMIX_cor=function(data_input, #An n x d data frame or matrix of the summary stat
                   seed=10,#set.seed, default is 10
                   verbose=FALSE #Whether to print the full log-likelihood for each iteration, default is FALSE
 ){
-  set.seed(seed)
+  data_type <- match.arg(data_type)
+  if(data_type=="p"){data_input=apply(data_input,2,function(x) qnorm(x,lower.tail=F))}
+  
+ 
   n_data=dim(data_input)[2]
   if(length(cov)!=g | length(mu_vec)!=g | length(mu_vec[[1]])!=n_data | dim(cov[[1]])[1]!=n_data | dim(cov[[1]])[2]!=n_data | length(p)!=g | g>(2^n_data) ) {cat(crayon::red("Error: The dimensions of initial values don't match with each other!")); return(1)}
 for(i in 2:g) {
@@ -32,7 +37,8 @@ for(i in 2:g) {
 }
   if(dim(data_input)[2]!=3 & dim(data_input)[2]!=2) {cat(crayon::red("Error: Function does not support the number of data types!")); return(1)}
 
-
+  set.seed(seed)
+  
 
   cat(crayon::cyan$bold("Start IMIX-cor model procedure!\n"))
   # modified sum only considers finite values
