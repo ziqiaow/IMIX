@@ -1,0 +1,17 @@
+Package: IMIX
+Type: Package
+Title: Integrative genomic analysis for multiple data types using a multivariate mixture model framework
+Version: 0.1.0
+Author: Ziqiao Wang, Peng Wei
+Maintainer: Ziqiao Wang <wzqjanet@gmail.com>
+Description: This is an R package based on a multivariate mixture model framework for integrative analysis of multiple types of omics data. This package can be implemented for testing whether a disease is associated with genes in multiple genomic data types, such as DNA methylation, copy number variation and gene expression. We use the summary statistics of association test outputs and conduct our test integratively for two or three types of genomics data. IMIX features statistically-principled model selection, global FDR control and computational efficiency. 
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Depends: 
+    R (>= 3.5)
+Imports:
+    crayon,mvtnorm,mixtools
+Suggests: knitr,rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 7.0.2.9000
