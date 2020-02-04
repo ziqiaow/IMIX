@@ -6,6 +6,7 @@
 \usage{
 IMIX_cor(
   data_input,
+  data_type = c("p", "z"),
   g = 8,
   mu_vec,
   cov,
@@ -17,7 +18,9 @@ IMIX_cor(
 )
 }
 \arguments{
-\item{data_input}{An n x d data frame or matrix of the summary statistics z score, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.}
+\item{data_input}{An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.}
+
+\item{data_type}{Whether the input data is the p values or z scores, default is p value}
 
 \item{g}{The number of components, default is 8 for three data types}
 
