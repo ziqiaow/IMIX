@@ -45,11 +45,13 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
   p=p_ini
 
   if(is.null(mu_vec)==TRUE | is.null(cov)==TRUE | is.null(p)==TRUE ) {
+    cat(crayon::cyan$bold("Assign initial values!"))
+   
 
     if(dim(data_input)[2]==3){
-    fit1=mixtools::normalmixEM(datatrue[,1],maxit = maxit)
-    fit2=mixtools::normalmixEM(datatrue[,2],maxit = maxit)
-    fit3=mixtools::normalmixEM(datatrue[,3],maxit = maxit)
+    fit1=mixtools::normalmixEM(data_input[,1],maxit = maxiter)
+    fit2=mixtools::normalmixEM(data_input[,2],maxit = maxiter)
+    fit3=mixtools::normalmixEM(data_input[,3],maxit = maxiter)
 
     #########################################
     #Initial values based on single EM
@@ -85,8 +87,8 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
         p1[2]*p2[2]*p3[1],p1[2]*p2[1]*p3[2],p1[1]*p2[2]*p3[2],p1[2]*p2[2]*p3[2])}
 
     } else if (dim(data_input)[2]==2){
-    fit1=normalmixEM(datatrue[,1],maxit = maxit)
-    fit2=normalmixEM(datatrue[,2],maxit = maxit)
+    fit1=normalmixEM(data_input[,1],maxit = maxiter)
+    fit2=normalmixEM(data_input[,2],maxit = maxiter)
 
     #########################################
     #Initial values based on single EM
