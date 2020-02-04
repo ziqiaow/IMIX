@@ -45,7 +45,7 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
   p=p_ini
 
   if(is.null(mu_vec)==TRUE | is.null(cov)==TRUE | is.null(p)==TRUE ) {
-    cat(crayon::cyan$bold("Assign initial values!"))
+    cat(crayon::cyan$bold("Assign initial values!\n"))
    
 
     if(dim(data_input)[2]==3){
