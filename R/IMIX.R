@@ -87,8 +87,8 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
         p1[2]*p2[2]*p3[1],p1[2]*p2[1]*p3[2],p1[1]*p2[2]*p3[2],p1[2]*p2[2]*p3[2])}
 
     } else if (dim(data_input)[2]==2){
-    fit1=normalmixEM(data_input[,1],maxit = maxiter)
-    fit2=normalmixEM(data_input[,2],maxit = maxiter)
+    fit1=mixtools::normalmixEM(data_input[,1],maxit = maxiter)
+    fit2=mixtools::normalmixEM(data_input[,2],maxit = maxiter)
 
     #########################################
     #Initial values based on single EM
