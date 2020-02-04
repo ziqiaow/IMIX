@@ -19,9 +19,9 @@
 
 IMIX=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
               data_type=c("p","z"), #Whether the input data is the p values or z scores, default is p value
-              mu_ini, #Initial value for the mean of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format that corresponds to the initial value of mu, for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
-              cov_ini, #A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.
-              p_ini, #Initial value for the proportion of the distribution in the Gaussian mixture model. A vector of length 2^d, d is the number of data types.
+              mu_ini=NULL, #Initial value for the mean of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format that corresponds to the initial value of mu, for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
+              cov_ini=NULL, #A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.
+              p_ini=NULL, #Initial value for the proportion of the distribution in the Gaussian mixture model. A vector of length 2^d, d is the number of data types.
               tol=1e-6, #The convergence criterion. Convergence is declared when the change in the observed data log-likelihood increases by less than epsilon.
               maxiter=1000, #The maximum number of iteration, default is 1000
               seed=10,#set.seed, default is 10
