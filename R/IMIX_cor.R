@@ -32,9 +32,12 @@ IMIX_cor=function(data_input, #An n x d data frame or matrix of the summary stat
  
   n_data=dim(data_input)[2]
   if(length(cov)!=g | length(mu_vec)!=g | length(mu_vec[[1]])!=n_data | dim(cov[[1]])[1]!=n_data | dim(cov[[1]])[2]!=n_data | length(p)!=g | g>(2^n_data) ) {cat(crayon::red("Error: The dimensions of initial values don't match with each other!")); return(1)}
-for(i in 2:g) {
+
+  if(g>1){
+  for(i in 2:g) {
   if(dim(cov[[i]])[1]!=dim(cov[[i]])[2] | dim(cov[[i]])[1]!=n_data | length(mu_vec[[i]])!=length(mu_vec[[1]]))  {cat(crayon::red("Error: The dimensions of initial values don't match with each other!")); return(1)}
-}
+  }
+  }
   if(dim(data_input)[2]!=3 & dim(data_input)[2]!=2) {cat(crayon::red("Error: Function does not support the number of data types!")); return(1)}
 
   set.seed(seed)

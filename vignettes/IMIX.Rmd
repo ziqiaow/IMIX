@@ -3,15 +3,16 @@ title: "A quick tour of IMIX"
 author: "Ziqiao Wang"
 date: "2020/2/3"
 output:
-  html_document: 
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+  html_document:
     theme: cerulean
-    toc: true
+    toc: yes
     toc_depth: 3
   rmarkdown::html_vignette: default
-vignette: >
-  %\VignetteIndexEntry{A User's Guide to IMIX}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+vignette: |
+  %\VignetteIndexEntry{A User's Guide to IMIX} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
 ---
 
 

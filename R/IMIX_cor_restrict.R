@@ -31,6 +31,8 @@ IMIX_cor_restrict=function(data_input, #An n x d data frame or matrix of the sum
 
   n_data=dim(data_input)[2]
   if(length(cov)!=2^n_data | length(mu)!=2*n_data | length(p)!=(2^n_data) | dim(cov[[1]])[1]!=n_data | dim(cov[[1]])[2]!=n_data ) {cat(crayon::red("Error: The dimensions of initial values don't match with each other!")); return(1)}
+  
+  
   for(i in 2:(2^n_data)) {
     if(dim(cov[[i]])[1]!=dim(cov[[i]])[2] | dim(cov[[i]])[1]!=n_data )  {cat(crayon::red("Error: The dimensions of initial values don't match with each other!")); return(1)}
   }

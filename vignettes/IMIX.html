@@ -398,67 +398,73 @@ p_input=rep(0.25,4) # initial value for the proportion of components</code></pre
 <h4>IMIX test without specifying the initial values of the parameters</h4>
 <pre class="r"><code>test2=IMIX(data_input=data_z,data_type=&quot;z&quot;,p_ini=rep(0.125,8),alpha=0.05,verbose = TRUE)</code></pre>
 <pre><code>## Assign initial values!
-## number of iterations= 20 
+## number of iterations= 10 
 ## number of iterations= 15 
-## number of iterations= 12 
+## number of iterations= 18 
 ## Start IMIX-ind procedure!
-## iter=1: loglik=-200610.230548037
-## iter=2: loglik=-6303.72515767923
-## iter=3: loglik=-6298.62669066911
-## iter=4: loglik=-6298.60737952145
-## iter=5: loglik=-6298.60509656174
-## iter=6: loglik=-6298.60475479192
-## iter=7: loglik=-6298.60470064528
-## iter=8: loglik=-6298.60469172433
-## iter=9: loglik=-6298.60469021548
-## iter=10: loglik=-6298.60468995598
+## iter=1: loglik=-197505.549128909
+## iter=2: loglik=-6281.15495506306
+## iter=3: loglik=-6279.51497698928
+## iter=4: loglik=-6279.5094248182
+## iter=5: loglik=-6279.50882406403
+## iter=6: loglik=-6279.50870492644
+## iter=7: loglik=-6279.50867607455
+## iter=8: loglik=-6279.50866799727
+## iter=9: loglik=-6279.50866551773
+## iter=10: loglik=-6279.50866471521
 ## Successfully Done!
 ## Start IMIX-cor-twostep procedure!
-## iter=1: loglik=-201585.161461969
-## iter=2: loglik=-6299.12405838178
-## iter=3: loglik=-6276.95002834822
-## iter=4: loglik=-6276.20212703467
-## iter=5: loglik=-6276.14694472827
-## iter=6: loglik=-6276.14100220852
-## iter=7: loglik=-6276.14016277935
-## iter=8: loglik=-6276.14001888539
-## iter=9: loglik=-6276.13999086654
-## iter=10: loglik=-6276.13998497755
-## iter=11: loglik=-6276.13998368496
-## iter=12: loglik=-6276.13998339429
+## iter=1: loglik=-197361.368925403
+## iter=2: loglik=-6280.15785166108
+## iter=3: loglik=-6263.54291718669
+## iter=4: loglik=-6262.95813715455
+## iter=5: loglik=-6262.88425788716
+## iter=6: loglik=-6262.87195077699
+## iter=7: loglik=-6262.86960927837
+## iter=8: loglik=-6262.86913073683
+## iter=9: loglik=-6262.86902909704
+## iter=10: loglik=-6262.86900704586
+## iter=11: loglik=-6262.8690022018
+## iter=12: loglik=-6262.86900112928
+## iter=13: loglik=-6262.86900089055
 ## Successfully Done!
 ## Start IMIX-cor model procedure!
-## iter=1: loglik=-201585.161461969
-## iter=2: loglik=-6299.12405838178
-## iter=3: loglik=-6276.98432212342
-## iter=4: loglik=-6276.30762242661
-## iter=5: loglik=-6276.2664357616
-## iter=6: loglik=-6276.26547806506
-## iter=7: loglik=-6276.26686810537
-## iter=8: loglik=-6276.26773285095
-## iter=9: loglik=-6276.26815485076
-## iter=10: loglik=-6276.26834824493
-## iter=11: loglik=-6276.26843519174
-## iter=12: loglik=-6276.2684741592
-## iter=13: loglik=-6276.26849169029
-## iter=14: loglik=-6276.26849963154
-## iter=15: loglik=-6276.26850325726
-## iter=16: loglik=-6276.26850492569
-## iter=17: loglik=-6276.26850569904
+## iter=1: loglik=-197361.368925403
+## iter=2: loglik=-6280.15785166108
+## iter=3: loglik=-6263.64389499733
+## iter=4: loglik=-6263.04595341226
+## iter=5: loglik=-6262.97366411154
+## iter=6: loglik=-6262.96486231403
+## iter=7: loglik=-6262.96474952284
+## iter=8: loglik=-6262.96540037571
+## iter=9: loglik=-6262.96582789743
+## iter=10: loglik=-6262.9660464445
+## iter=11: loglik=-6262.96614986741
+## iter=12: loglik=-6262.96619744643
+## iter=13: loglik=-6262.96621913462
+## iter=14: loglik=-6262.96622901335
+## iter=15: loglik=-6262.96623352685
+## iter=16: loglik=-6262.96623559875
+## iter=17: loglik=-6262.96623655484
 ## Successfully Done!
 ## Start IMIX-cor-restrict procedure!
-## iter=1: loglik=-201585.161461969
-## iter=2: loglik=-6299.12405838178
-## iter=3: loglik=-6276.92743520473
-## iter=4: loglik=-6276.08991963376
-## iter=5: loglik=-6276.02824224735
-## iter=6: loglik=-6276.02114075487
-## iter=7: loglik=-6276.02003710543
-## iter=8: loglik=-6276.01983103788
-## iter=9: loglik=-6276.0197883218
-## iter=10: loglik=-6276.01977893696
-## iter=11: loglik=-6276.01977680444
-## iter=12: loglik=-6276.01977630924
+## iter=1: loglik=-197361.368925403
+## iter=2: loglik=-6280.15785166108
+## iter=3: loglik=-6263.58633181037
+## iter=4: loglik=-6262.92482526231
+## iter=5: loglik=-6262.80912741346
+## iter=6: loglik=-6262.77607649251
+## iter=7: loglik=-6262.76476505705
+## iter=8: loglik=-6262.76063075765
+## iter=9: loglik=-6262.75907797462
+## iter=10: loglik=-6262.75848698991
+## iter=11: loglik=-6262.75826043256
+## iter=12: loglik=-6262.75817321874
+## iter=13: loglik=-6262.75813956376
+## iter=14: loglik=-6262.75812655821
+## iter=15: loglik=-6262.75812152832
+## iter=16: loglik=-6262.75811958216
+## iter=17: loglik=-6262.75811882898
 ## Successfully Done!
 ## Start Model Selection!
 ## Start Adaptive FDR Control!
@@ -468,60 +474,60 @@ p_input=rep(0.25,4) # initial value for the proportion of components</code></pre
 <h4>Results of example 2</h4>
 <pre class="r"><code>test2$estimatedFDR</code></pre>
 <pre><code>## $estimated_mFDR_comp2
-## [1] 0.04565652
+## [1] 0.04968922
 ## 
 ## $estimated_mFDR_comp3
-## [1] 0.04828153
+## [1] 0.04407714
 ## 
 ## $estimated_mFDR_comp4
-## [1] 0.04514143
+## [1] 0.04992054
 ## 
 ## $estimated_mFDR_comp5
-## [1] 0.04987801
+## [1] 0.04897784
 ## 
 ## $estimated_mFDR_comp6
-## [1] 0.04813606
+## [1] 0.04868472
 ## 
 ## $estimated_mFDR_comp7
-## [1] 0.0490774
+## [1] 0.0477047
 ## 
 ## $estimated_mFDR_comp8
-## [1] 0.04904868</code></pre>
+## [1] 0.04910006</code></pre>
 <pre class="r"><code>test2$`AIC/BIC`</code></pre>
 <pre><code>##                        AIC      BIC
-## IMIX_ind          12635.21 12728.46
-## IMIX_cor_twostep  12662.28 12932.21
-## IMIX_cor          12710.54 13098.25
-## IMIX_cor_restrict 12674.04 12973.41</code></pre>
+## IMIX_ind          12597.02 12690.26
+## IMIX_cor_twostep  12635.74 12905.66
+## IMIX_cor          12683.93 13071.65
+## IMIX_cor_restrict 12647.52 12946.89</code></pre>
 <pre class="r"><code>test2$`Selected Model`</code></pre>
 <pre><code>## [1] &quot;IMIX_ind&quot;</code></pre>
 <pre class="r"><code>str(test2$IMIX_ind)</code></pre>
 <pre><code>## List of 7
 ##  $ posterior prob      :'data.frame':    1000 obs. of  8 variables:
-##   ..$ component1: num [1:1000] 2.24e-15 4.95e-18 3.91e-06 1.00 3.38e-01 ...
-##   ..$ component2: num [1:1000] 2.07e-06 9.94e-25 1.00 6.86e-05 3.84e-05 ...
-##   ..$ component3: num [1:1000] 1.43e-09 8.08e-13 1.77e-12 3.55e-04 6.61e-01 ...
-##   ..$ component4: num [1:1000] 5.23e-20 6.57e-06 5.81e-11 2.72e-07 5.76e-09 ...
-##   ..$ component5: num [1:1000] 1.00 1.23e-19 3.42e-07 1.84e-08 5.68e-05 ...
-##   ..$ component6: num [1:1000] 4.07e-11 1.11e-12 1.25e-05 1.57e-11 5.49e-13 ...
-##   ..$ component7: num [1:1000] 3.11e-14 1.00 2.45e-17 9.02e-11 1.05e-08 ...
-##   ..$ component8: num [1:1000] 2.60e-05 1.81e-07 5.65e-12 5.59e-15 1.07e-12 ...
-##  $ Full LogLik all     : num [1:10] -200610 -6304 -6299 -6299 -6299 ...
-##  $ Full MaxLogLik final: num -6299
+##   ..$ component1: num [1:1000] 4.60e-08 1.00 4.99e-06 2.36e-10 4.23e-15 ...
+##   ..$ component2: num [1:1000] 2.12e-12 1.68e-09 3.56e-12 1.09e-07 2.06e-20 ...
+##   ..$ component3: num [1:1000] 1.21e-15 2.15e-08 7.23e-12 2.27e-11 1.89e-07 ...
+##   ..$ component4: num [1:1000] 1.00 1.09e-06 1.00 2.08e-03 2.71e-08 ...
+##   ..$ component5: num [1:1000] 5.44e-20 3.51e-17 5.01e-18 1.02e-08 8.96e-13 ...
+##   ..$ component6: num [1:1000] 4.42e-05 1.76e-15 6.83e-07 9.18e-01 1.26e-13 ...
+##   ..$ component7: num [1:1000] 2.17e-08 1.94e-14 1.19e-06 1.65e-04 1.00 ...
+##   ..$ component8: num [1:1000] 1.05e-12 3.41e-23 8.90e-13 7.96e-02 5.10e-06 ...
+##  $ Full LogLik all     : num [1:10] -197506 -6281 -6280 -6280 -6280 ...
+##  $ Full MaxLogLik final: num -6280
 ##  $ iterations          : num 10
-##  $ pi                  : num [1:8] 0.132 0.144 0.145 0.116 0.12 ...
-##  $ mu                  : num [1:6] -0.0235 4.9772 -0.0198 4.9961 -0.0569 ...
-##  $ sigma               : num [1:6] 0.978 1.019 1.042 1.005 0.963 ...</code></pre>
+##  $ pi                  : num [1:8] 0.12 0.129 0.122 0.131 0.128 ...
+##  $ mu                  : num [1:6] -0.00813 5.03807 0.03673 4.96123 0.07205 ...
+##  $ sigma               : num [1:6] 0.993 0.972 1.006 0.967 1.003 ...</code></pre>
 <pre class="r"><code>dim(test2$significant_genes_with_FDRcontrol)</code></pre>
 <pre><code>## [1] 1000    3</code></pre>
 <pre class="r"><code>head(test2$significant_genes_with_FDRcontrol)</code></pre>
 <pre><code>##             localFDR class_withoutFDRcontrol class_FDRcontrol
-## gene357 3.314333e-08                       8                8
-## gene918 5.133492e-08                       8                8
-## gene421 6.537200e-08                       8                8
-## gene371 9.556879e-08                       8                8
-## gene160 1.085592e-07                       8                8
-## gene409 1.150422e-07                       8                8</code></pre>
+## gene847 1.030455e-07                       8                8
+## gene298 3.106618e-07                       8                8
+## gene751 4.753937e-07                       8                8
+## gene460 5.796431e-07                       8                8
+## gene893 6.660932e-07                       8                8
+## gene360 1.243274e-06                       8                8</code></pre>
 <p>For the output includes each model parameter estimations, the model selection AIC and BIC values and the best selected model. The estimated FDR corresponding to the prespecified <span class="math inline">\(\alpha=0.05\)</span> threshold, the local FDR and class labels for each gene, both without FDR control and based on the FDR control at <span class="math inline">\(\alpha=0.05\)</span>. Here the class labels corresponds to 1=(meth-,ge-,cnv-),2=(meth+,ge-,cnv-),3=(meth-,ge+,cnv-),4=(meth-,ge-,cnv+),5=(meth+,ge+,cnv-),6=(meth+,ge-,cnv+),7=(meth-,ge+,cnv+),8=(meth+,ge+,cnv+).</p>
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.1 (2019-07-05)

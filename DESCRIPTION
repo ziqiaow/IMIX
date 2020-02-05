@@ -11,7 +11,7 @@ LazyData: true
 Depends: 
     R (>= 3.5)
 Imports:
-    crayon,mvtnorm,mixtools
+    crayon,mvtnorm,mixtools,mclust
 Suggests: knitr,rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 7.0.2.9000
