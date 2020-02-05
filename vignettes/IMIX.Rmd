@@ -3,35 +3,48 @@ title: "A quick tour of IMIX"
 author: "Ziqiao Wang"
 date: "2020/2/3"
 output:
-  pdf_document:
-    toc: yes
-    toc_depth: '3'
   html_document:
     theme: cerulean
     toc: yes
     toc_depth: 3
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
   rmarkdown::html_vignette: default
 vignette: |
   %\VignetteIndexEntry{A User's Guide to IMIX} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
 ---
 
+&nbsp;
+&nbsp;
 
 ## Introduction
+
+&nbsp;
+&nbsp;
 
 IMIX is an R package for integration of multiple genomics data types to investigate the associations between genes and a specific outcome, including binary, continuous, survival, and categorical outcomes based on finite multivariate Gaussian mixture modelling using summary statistics. The input is summary statistics for each data type including either p-value or z-score. We support summary statistics of data outputs such as DNA methylation, copy number variation(CNV), and gene expression (RNAseq/microarray) at gene level. Nonethelss, IMIX is as flexible as it can be extended to other molecular level as long as the summary statistics of the multiple data types are coherent with each other. It provides features to select the true number of components behind the data, parameter estimation for the summary statistics via EM algorithm. The most important feature is that it evaluates the data through different covariance and mean structures of mixture modelling and selects the overall best fitting model, which in turn provides the oracle output while controlling for the global false discovery rate (FDR) at a user specified level. 
 
 This document gives a quick tour of IMIX functionalities. The tasks addressed in this package include assessment of the true number of components with respect to the data, identification of interesting genes for each data type combination, FDR control, and plotting functionality. See help(package="IMIX") for further details and references provided by citation("IMIX").
 
-
+&nbsp;
+&nbsp;
 
 ```{r setup,include=F}
 library(IMIX)
+library(mclust)
 ```
 
 ## Data Preparation
 
+&nbsp;
+&nbsp;
+
 #### Example data 1: p values for RNAseq and CNV data
 Each row is a gene, each column is a data type. The dimension of the input data is $1000 \times 2$.
+
+&nbsp;
+&nbsp;
 
 ```{r}
 data("data_p")
@@ -39,10 +52,16 @@ dim(data_p)
 head(data_p)
 ```
 
-
+&nbsp;
+&nbsp;
 
 #### Example data 2: Simulate z scores for DNA methylation, RNAseq, and CNV data
+
+
 The dimension is $1000 \times 3$.
+
+&nbsp;
+&nbsp;
 
 ```{r}
 library(MASS)
@@ -131,12 +150,73 @@ dim(data_z)
     
 ```
 
+&nbsp;
+&nbsp;
 
+## Model selection: select the number of components for the mixture distribution
 
-## Integrative association test for two and three omics data types
+&nbsp;
+
 ### Example 1: Two data types, p values
 
-#### Initial values for the p transformed z score mixture model, this step can be skipped
+&nbsp;
+
+```{r}
+select_comp1=model_selection_component(data_p,data_type = "p",seed=20)
+```
+
+&nbsp;
+&nbsp;
+
+```{r}
+names(select_comp1)
+select_comp1$Component_Selected_AIC
+select_comp1$Component_Selected_BIC
+```
+
+&nbsp;
+
+The model selected 3 components out of 4. Then we visualize it.
+```{r}
+plot_component(select_comp1,type="AIC")
+```
+
+&nbsp;
+&nbsp;
+
+### Example 2: Three data types, z scores
+
+&nbsp;
+
+
+```{r}
+select_comp2=model_selection_component(data_z,data_type = "z")
+names(select_comp2)
+select_comp2$Component_Selected_AIC
+select_comp2$Component_Selected_BIC
+```
+
+&nbsp;
+&nbsp;
+
+The model selected all 8 components. Then we visualize it.
+```{r}
+plot_component(select_comp2,type="AIC")
+```
+
+&nbsp;
+&nbsp;
+
+## Integrative genomics test for two and three omics data types
+
+&nbsp;
+&nbsp;
+
+### Example 1: Two data types, p values
+
+&nbsp;
+
+Initial values for the p transformed z score mixture model, this step can be skipped
 
 ```{r}
 mu_input=list() # generate an initial list for mean
@@ -153,13 +233,17 @@ for(i in 1:4){
 p_input=rep(0.25,4) # initial value for the proportion of components
 ```
 
+&nbsp;
+&nbsp;
 
 #### Start the test
 ```{r}
-test1=IMIX(data_input=data_p,data_type="p",mu_ini=mu_input,cov_ini=cov_input,p_ini=p_input,alpha=0.2)
+test1=IMIX(data_input=data_p,data_type="p",mu_ini=mu_input,cov_ini=cov_input,p_ini=p_input,alpha=0.1)
 ```
 
-#### Result outputs of example 1
+&nbsp;
+
+Result outputs of example 1
 ```{r}
 test1$estimatedFDR # Print the estimated global FDR for each component
 test1$`AIC/BIC` # The AIC and BIC values for each model
@@ -169,17 +253,29 @@ dim(test1$significant_genes_with_FDRcontrol)
 head(test1$significant_genes_with_FDRcontrol)
 ```
 
-The results for each gene, this includes localFDR, classes with global FDR control at $\alpha=0.2$ and classes without global FDR control. Here the class labels corresponds to 1=(ge-,cnv-),2=(ge+,cnv-),3=(ge-,cnv+),4=(ge+,cnv+).
+&nbsp;
+&nbsp;
 
+The results for each gene, this includes localFDR, classes with global FDR control at $\alpha=0.1$ and classes without global FDR control. Here the class labels corresponds to 1=(ge-,cnv-),2=(ge+,cnv-),3=(ge-,cnv+),4=(ge+,cnv+). We could see that component 3 is missing here after controlling for FDR, and there are only 9 genes in component 3 before we control for FDR. This result is coherent with the model selection result.
+
+&nbsp;
+&nbsp;
 
 ### Example 2: Three data types, tranformed z values
-#### IMIX test without specifying the initial values of the parameters
+
+&nbsp;
+
+IMIX test without specifying the initial values of the parameters
+
+&nbsp;
+
 ```{r}
 test2=IMIX(data_input=data_z,data_type="z",p_ini=rep(0.125,8),alpha=0.05,verbose = TRUE)
 ```
 
+&nbsp;
 
-#### Results of example 2
+Results of example 2
 ```{r}
 test2$estimatedFDR
 test2$`AIC/BIC`
@@ -189,9 +285,14 @@ dim(test2$significant_genes_with_FDRcontrol)
 head(test2$significant_genes_with_FDRcontrol)
 ```
 
+&nbsp;
+&nbsp;
+
 For the output includes each model parameter estimations, the model selection AIC and BIC values and the best selected model. The estimated FDR corresponding to the prespecified $\alpha=0.05$ threshold, the local FDR and class labels for each gene, both without FDR control and based on the FDR control at $\alpha=0.05$. Here the class labels corresponds to 1=(meth-,ge-,cnv-),2=(meth+,ge-,cnv-),3=(meth-,ge+,cnv-),4=(meth-,ge-,cnv+),5=(meth+,ge+,cnv-),6=(meth+,ge-,cnv+),7=(meth-,ge+,cnv+),8=(meth+,ge+,cnv+).
  
-
+&nbsp;
+&nbsp;
+&nbsp;
 
 
 ```{r}

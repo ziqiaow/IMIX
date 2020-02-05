@@ -46,6 +46,7 @@ model_selection=function(loglik, #Full log likelihood, result output: `Full MaxL
 #' @title Component Selection
 #' @description Model selection for components based on AIC and BIC information criteria for models in IMIX
 #'
+#' @import mclust
 #' @param data_input An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
 #' @param data_type Whether the input data is the p values or z scores, default is p value
 #' @param tol The convergence criterion. Convergence is declared when the change in the observed data log-likelihood increases by less than epsilon.
