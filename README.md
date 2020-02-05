@@ -17,4 +17,4 @@ vignette("IMIX")
 ```
 There will be examples for all the functions in IMIX package. If you have any question, use help().
 
-Have fun with IMIX!
+Have fun with IMIX :smiley:
