@@ -7,13 +7,13 @@
 FDR_control_adaptive(lfdr, alpha)
 }
 \arguments{
-\item{lfdr}{Local FDR for each gene of the mixture model results for one component}
+\item{lfdr}{Local FDR for each gene of the mixture model results for one component or a combination of components}
 
 \item{alpha}{Prespecified FDR control level}
 }
 \value{
-The estimated mFDR for the target component and whether the genes is classified in this component after FDR control at alpha level, 1 is yes, 0 is no.
+The estimated mFDR for the target component or component combinaitons and whether the genes is classified in this component/combination after FDR control at alpha level, 1 is yes, 0 is no.
 }
 \description{
-The adaptive procedure for global FDR control based on the output from IMIX models, this can be directly performed by IMIX function, however, if you are interested in other mixture models, this function would be useful.
+The adaptive procedure for global FDR control based on the output from IMIX models, this can be directly performed by IMIX function, however, if you are interested in other mixture models, alpha level or combinations of components, this function would be useful.
 }

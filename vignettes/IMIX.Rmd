@@ -1,15 +1,17 @@
 ---
 title: "A quick start guide to IMIX"
 author: "Ziqiao Wang"
-date: "2020/2/3"
+date: "2020/2/6"
 output:
   pdf_document:
+    number_sections: yes
     toc: yes
-    toc_depth: '3'
+    toc_depth: '2'
   html_document:
+    number_sections: yes
     theme: cerulean
     toc: yes
-    toc_depth: 3
+    toc_depth: 2
   rmarkdown::html_vignette: default
 vignette: |
   %\VignetteIndexEntry{A quick start guide to IMIX} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
@@ -18,7 +20,7 @@ vignette: |
 &nbsp;
 &nbsp;
 
-## Introduction
+# Introduction
 
 &nbsp;
 &nbsp;
@@ -27,20 +29,21 @@ IMIX is an R package for integration of multiple genomics data types to investig
 
 This document gives a quick tour of IMIX functionalities. The tasks addressed in this package include assessment of the true number of components with respect to the data, identification of interesting genes for each data type combination, FDR control, and plotting functionality. See help(package="IMIX") for further details and references provided by citation("IMIX").
 
+
 &nbsp;
 &nbsp;
 
+  
 ```{r setup,include=F}
-library(IMIX)
-library(mclust)
+library("IMIX")
 ```
 
-## Data Preparation
+# Data Preparation
 
 &nbsp;
 &nbsp;
 
-#### Example data 1: p values for RNAseq and CNV data
+## Example data 1: p values for RNAseq and CNV data
 Each row is a gene, each column is a data type. The dimension of the input data is $1000 \times 2$.
 
 &nbsp;
@@ -55,7 +58,7 @@ head(data_p)
 &nbsp;
 &nbsp;
 
-#### Example data 2: Simulate z scores for DNA methylation, RNAseq, and CNV data
+## Example data 2: Simulate z scores for DNA methylation, RNAseq, and CNV data
 
 
 The dimension is $1000 \times 3$.
@@ -65,7 +68,7 @@ The dimension is $1000 \times 3$.
 
 ```{r}
 library(MASS)
-N=1000
+N = 1000
 truelabel <- sample(1:8,
                     prob = rep(0.125, 8),
                     size = N,
@@ -87,56 +90,56 @@ for (i in 1:8) {
   cov_sim[[i]] = diag(3)
 }
 data_z = array(0, c(N, 3))
-data_z[which(truelabel == 1), ] = mvrnorm(
+data_z[which(truelabel == 1),] = mvrnorm(
   n = length(which(truelabel == 1)),
   mu = mu1_mv,
   Sigma = cov_sim[[1]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 2), ] = mvrnorm(
+data_z[which(truelabel == 2),] = mvrnorm(
   n = length(which(truelabel == 2)),
   mu = mu2_mv,
   Sigma = cov_sim[[2]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 3), ] = mvrnorm(
+data_z[which(truelabel == 3),] = mvrnorm(
   n = length(which(truelabel == 3)),
   mu = mu3_mv,
   Sigma = cov_sim[[3]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 4), ] = mvrnorm(
+data_z[which(truelabel == 4),] = mvrnorm(
   n = length(which(truelabel == 4)),
   mu = mu4_mv,
   Sigma = cov_sim[[4]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 5), ] = mvrnorm(
+data_z[which(truelabel == 5),] = mvrnorm(
   n = length(which(truelabel == 5)),
   mu = mu5_mv,
   Sigma = cov_sim[[5]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 6), ] = mvrnorm(
+data_z[which(truelabel == 6),] = mvrnorm(
   n = length(which(truelabel == 6)),
   mu = mu6_mv,
   Sigma = cov_sim[[6]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 7), ] = mvrnorm(
+data_z[which(truelabel == 7),] = mvrnorm(
   n = length(which(truelabel == 7)),
   mu = mu7_mv,
   Sigma = cov_sim[[7]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 8), ] = mvrnorm(
+data_z[which(truelabel == 8),] = mvrnorm(
   n = length(which(truelabel == 8)),
   mu = mu8_mv,
   Sigma = cov_sim[[8]],
@@ -144,25 +147,25 @@ data_z[which(truelabel == 8), ] = mvrnorm(
   empirical = FALSE
 )
 
-rownames(data_z)=paste0("gene",1:N)
-colnames(data_z)=c("z.methy","z.ge","z.cnv")
+rownames(data_z) = paste0("gene", 1:N)
+colnames(data_z) = c("z.methy", "z.ge", "z.cnv")
 dim(data_z)
-    
+
 ```
 
 &nbsp;
 &nbsp;
 
-## Model selection: select the number of components for the mixture distribution
+# Model selection: select the number of components for the mixture distribution
 
 &nbsp;
 
-### Example 1: Two data types, p values
+## Example 1: Two data types, p values
 
 &nbsp;
 
 ```{r}
-select_comp1=model_selection_component(data_p,data_type = "p",seed=20)
+select_comp1 = model_selection_component(data_p, data_type = "p", seed = 20)
 ```
 
 &nbsp;
@@ -178,19 +181,19 @@ select_comp1$Component_Selected_BIC
 
 The model selected 3 components out of 4. Then we visualize it.
 ```{r}
-plot_component(select_comp1,type="AIC")
+plot_component(select_comp1, type = "AIC")
 ```
 
 &nbsp;
 &nbsp;
 
-### Example 2: Three data types, z scores
+## Example 2: Three data types, z scores
 
 &nbsp;
 
 
 ```{r}
-select_comp2=model_selection_component(data_z,data_type = "z")
+select_comp2 = model_selection_component(data_z, data_type = "z")
 names(select_comp2)
 select_comp2$Component_Selected_AIC
 select_comp2$Component_Selected_BIC
@@ -201,44 +204,51 @@ select_comp2$Component_Selected_BIC
 
 The model selected all 8 components. Then we visualize it.
 ```{r}
-plot_component(select_comp2,type="AIC")
+plot_component(select_comp2, type = "AIC")
 ```
 
 &nbsp;
 &nbsp;
 
-## Integrative genomics test for two and three omics data types
+# Integrative genomics test for two and three omics data types
 
 &nbsp;
 &nbsp;
 
-### Example 1: Two data types, p values
+## Example 1: Two data types, p values
 
 &nbsp;
 
 Initial values for the p transformed z score mixture model, this step can be skipped
 
 ```{r}
-mu_input=list() # generate an initial list for mean
-mu_input[[1]]=c(0,0) # mean vector for component 1, data 1 null and data 2 null
-mu_input[[2]]=c(3,0) # mean vector for component 2, data 1 nonnull and data 2 null
-mu_input[[3]]=c(0,3) # mean vector for component 3, data 1 null and data 2 nonnull
-mu_input[[4]]=c(3,3) # mean vector for component 4, data 1 nonnull and data 2 nonnull
+mu_input = list() # generate an initial list for mean
+mu_input[[1]] = c(0, 0) # mean vector for component 1, data 1 null and data 2 null
+mu_input[[2]] = c(3, 0) # mean vector for component 2, data 1 nonnull and data 2 null
+mu_input[[3]] = c(0, 3) # mean vector for component 3, data 1 null and data 2 nonnull
+mu_input[[4]] = c(3, 3) # mean vector for component 4, data 1 nonnull and data 2 nonnull
 
-cov_input=list() # generate an initial list for the covariance matrices
-for(i in 1:4){
-  cov_input[[i]]=diag(3)
+cov_input = list() # generate an initial list for the covariance matrices
+for (i in 1:4) {
+cov_input[[i]] = diag(3)
 }
 
-p_input=rep(0.25,4) # initial value for the proportion of components
+p_input = rep(0.25, 4) # initial value for the proportion of components
 ```
 
 &nbsp;
 &nbsp;
 
-#### Start the test
+Start the test
 ```{r}
-test1=IMIX(data_input=data_p,data_type="p",mu_ini=mu_input,cov_ini=cov_input,p_ini=p_input,alpha=0.1)
+test1 = IMIX(
+  data_input = data_p,
+  data_type = "p",
+  mu_ini = mu_input,
+  cov_ini = cov_input,
+  p_ini = p_input,
+  alpha = 0.1
+  )
 ```
 
 &nbsp;
@@ -248,7 +258,7 @@ Result outputs of example 1
 test1$estimatedFDR # Print the estimated global FDR for each component
 test1$`AIC/BIC` # The AIC and BIC values for each model
 test1$`Selected Model` # The best fitted model selected by AIC
-str(test1$IMIX_cor_twostep) 
+str(test1$IMIX_cor_twostep)
 dim(test1$significant_genes_with_FDRcontrol)
 head(test1$significant_genes_with_FDRcontrol)
 ```
@@ -261,7 +271,7 @@ The results for each gene, this includes localFDR, classes with global FDR contr
 &nbsp;
 &nbsp;
 
-### Example 2: Three data types, tranformed z values
+## Example 2: Three data types, tranformed z values
 
 &nbsp;
 
@@ -270,7 +280,13 @@ IMIX test without specifying the initial values of the parameters
 &nbsp;
 
 ```{r}
-test2=IMIX(data_input=data_z,data_type="z",p_ini=rep(0.125,8),alpha=0.05,verbose = TRUE)
+test2 = IMIX(
+  data_input = data_z,
+  data_type = "z",
+  p_ini = rep(0.125, 8),
+  alpha = 0.05,
+  verbose = TRUE
+)
 ```
 
 &nbsp;
@@ -289,10 +305,68 @@ head(test2$significant_genes_with_FDRcontrol)
 &nbsp;
 
 For the output includes each model parameter estimations, the model selection AIC and BIC values and the best selected model. The estimated FDR corresponding to the prespecified $\alpha=0.05$ threshold, the local FDR and class labels for each gene, both without FDR control and based on the FDR control at $\alpha=0.05$. Here the class labels corresponds to 1=(meth-,ge-,cnv-),2=(meth+,ge-,cnv-),3=(meth-,ge+,cnv-),4=(meth-,ge-,cnv+),5=(meth+,ge+,cnv-),6=(meth+,ge-,cnv+),7=(meth-,ge+,cnv+),8=(meth+,ge+,cnv+).
- 
+
+&nbsp;
+&nbsp;
+
+# Additional FDR control
+
+&nbsp;
+&nbsp;
+
+We provide two additional FDR control functions for the IMIX test result to achieve
+
+1. Another prespecified $\alpha$ level than the one prespecified using the IMIX function, users do not need to rerun IMIX test for another nominal level for the test result.
+
+2. A combination of multiple components for the IMIX result output, for example, if we want to control the FDR for genes that are associated with the outcome through gene expression, regardless of cnv, then the combination of components would be (ge+,cnv-) and (ge+,cnv+).
+
+
+&nbsp;
+
+
+## A different $\alpha$ threshold from IMIX() function
+
+&nbsp;
+
+Users can always have results controlling for FDR at a different $\alpha$ level than the output in IMIX() function, with no need to rerun the IMIX() test. Below is an R code example for data example 2 in controlling the FDR at $\alpha=0.2$. 
+
+```{r}
+fdr_control1 = FDR_control_adaptive_imix(imix_output = test2, alpha = 0.2) 
+# The input is the result output from IMIX() function
+fdr_control1$estimatedFDR
+head(fdr_control1$significant_genes_with_FDRcontrol)
+table(fdr_control1$significant_genes_with_FDRcontrol$class_FDRcontrol)
+```
+
+
+&nbsp;
+&nbsp;
+
+
+## A combination of multiple components
+
+&nbsp;
+
+Users can always have results controlling for FDR for a combination of components, we use data example 1 to illustrate this. Suppose we are interested in the genes that are associated with the outcome through gene expression, regardless of whether it associated with CNV, then we want to control FDR for (ge+,cnv-) and (ge+,cnv+). The corresponding label is class 2 & 4. Below is an R code example for data example 1 in controlling the FDR at $\alpha=0.2$ for component 2 & component 4. 
+
+```{r}
+test1$`Selected Model`
+lfdr_ge_combined = 1 - (test1$IMIX_cor_twostep$`posterior prob`[,2] + 
+                          test1$IMIX_cor_twostep$`posterior prob`[,4]) 
+# Class 2: (ge+,cnv-); class 4: (ge+,cnv+)
+names(lfdr_ge_combined) = rownames(test1$IMIX_cor_twostep$`posterior prob`)
+fdr_control2 = FDR_control_adaptive(lfdr = lfdr_ge_combined, alpha = 0.2)
+fdr_control2$estimatedFDR
+table(fdr_control2$significant_genes_with_FDRcontrol)
+```
+
+The result output fdr_control2 shows that 693 genes (indicator 1) are associated with the outcome through gene expression at FDR $\alpha=0.2$ for data example 1. The estimated mFDR is 0.1995.
+
+
 &nbsp;
 &nbsp;
 &nbsp;
+
 
 
 ```{r}
