@@ -26,9 +26,11 @@ IMIX(
 
 \item{data_type}{Whether the input data is the p values or z scores, default is p value}
 
-\item{mu_ini}{A list of initial values for the mean vectors for each component. If there are three data types and 8 components, then the initial is a list of 8 mean vectors, each vector is of length 3.}
+\item{mu_ini}{Initial values for the mean of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format: for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).}
 
-\item{p_ini}{Initial value for the proportion of the distribution in the Gaussian mixture model. A vector of length 2^d, d is the number of data types.}
+\item{sigma_ini}{Initial values for the standard deviations of the two components in each data type. A vector of length 2*d, d is number of data types. Needs to be in a special format: for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).}
+
+\item{p_ini}{Initial values for the proportion of the distribution of the two components in each data type. A vector of length 2*d, d is number of data types. Needs to be in a special format: for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).}
 
 \item{tol}{The convergence criterion. Convergence is declared when the change in the observed data log-likelihood increases by less than epsilon.}
 
@@ -40,13 +42,13 @@ IMIX(
 
 \item{model}{Which model to use to compute the data, default is all}
 
-\item{model_selection_method}{Model selection information criteria, based on AIC or BIC, default is AIC}
+\item{model_selection_method}{Model selection information criteria, based on AIC or BIC, default is BIC}
 
 \item{alpha}{Prespecified nominal level for global FDR control, default is 0.2}
 
 \item{verbose}{Whether to print the full log-likelihood for each iteration, default is FALSE}
 
-\item{cov_ini}{A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.}
+\item{sort_label}{Whether to sort the component labels in case component labels switched after convergence of the initial values, default is TRUE, notice that if the users chooose not to, they might need to check the interested IMIX model for the converged mean for the true component labels and perform the adaptive FDR control separately for an acurate result}
 }
 \value{
 The results of IMIX
