@@ -19,7 +19,7 @@ There will be examples for all the functions in IMIX package. If you have any qu
 
 Have fun with IMIX :smiley:
 
-### Authors
-Ziqiao Wang and Peng Wei
-
-Department of Biostatistics, The University of Texas at MD Anderson Cancer Center
+### Reference 
+IMIX: A multivariate mixture model approach to integrative analysis of multiple types of omics data
+Ziqiao Wang, Peng Wei
+bioRxiv 2020.06.23.167312; doi: https://doi.org/10.1101/2020.06.23.167312
