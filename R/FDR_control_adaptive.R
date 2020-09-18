@@ -48,16 +48,19 @@ FDR_control_adaptive=function(lfdr, #Local FDR for each gene of the mixture mode
 #' @title The adaptive procedure for global FDR control for IMIX output
 #' @description The adaptive procedure for global FDR control based on the output from IMIX models, this can be directly performed by IMIX function, however, if you are interested in other alpha levels, this function would be useful to avoid rerun the IMIX().
 #'
-#' @param imix_output The result output from IMIX() function, result controled at alpha level only for one component each time
-#' @param alpha Prespecified FDR control level
+#' @param imix_output The result output from IMIX() function, result controled at alpha level only for one component each time.
+#' @param model The target model among "IMIX_ind","IMIX_cor_twostep","IMIX_cor_restrict", and "IMIX_cor". Default is IMIX_ind.
+#' @param alpha Prespecified FDR control level.
 #' @return The estimated mFDR for the target component and classify the genes in each component after FDR control at alpha level.
 #' @export
 
 FDR_control_adaptive_imix=function(imix_output, #The result output from IMIX() function, result controled at alpha level only for one component each time
+                                   model=c("IMIX_ind","IMIX_cor_twostep","IMIX_cor_restrict","IMIX_cor"), #The target model, default is IMIX_ind
                                    alpha #Prespecified FDR control level
                                    ){
   
-  name = imix_output$`Selected Model`
+  #name = imix_output$`Selected Model`
+  name <- match.arg(model)
   best_model = unlist(imix_output[name], recursive = FALSE, use.names = TRUE)
   names(best_model) = gsub(paste0(name, "."), "", names(best_model))
   g = dim(best_model$`posterior prob`)[2]
