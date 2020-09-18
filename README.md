@@ -18,3 +18,8 @@ vignette("IMIX")
 There will be examples for all the functions in IMIX package. If you have any question, use help().
 
 Have fun with IMIX :smiley:
+
+### Authors
+Ziqiao Wang and Peng Wei
+
+Department of Biostatistics, The University of Texas at MD Anderson Cancer Center
