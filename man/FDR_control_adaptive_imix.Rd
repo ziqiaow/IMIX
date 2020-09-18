@@ -4,12 +4,18 @@
 \alias{FDR_control_adaptive_imix}
 \title{The adaptive procedure for global FDR control for IMIX output}
 \usage{
-FDR_control_adaptive_imix(imix_output, alpha)
+FDR_control_adaptive_imix(
+  imix_output,
+  model = c("IMIX_ind", "IMIX_cor_twostep", "IMIX_cor_restrict", "IMIX_cor"),
+  alpha
+)
 }
 \arguments{
-\item{imix_output}{The result output from IMIX() function, result controled at alpha level only for one component each time}
+\item{imix_output}{The result output from IMIX() function, result controled at alpha level only for one component each time.}
 
-\item{alpha}{Prespecified FDR control level}
+\item{model}{The target model among "IMIX_ind","IMIX_cor_twostep","IMIX_cor_restrict", and "IMIX_cor". Default is IMIX_ind.}
+
+\item{alpha}{Prespecified FDR control level.}
 }
 \value{
 The estimated mFDR for the target component and classify the genes in each component after FDR control at alpha level.
