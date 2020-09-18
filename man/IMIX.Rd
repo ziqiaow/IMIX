@@ -8,16 +8,17 @@ IMIX(
   data_input,
   data_type = c("p", "z"),
   mu_ini = NULL,
-  cov_ini = NULL,
+  sigma_ini = NULL,
   p_ini = NULL,
   tol = 1e-06,
   maxiter = 1000,
   seed = 10,
   ini.ind = TRUE,
   model = c("all", "IMIX_ind", "IMIX_cor_twostep", "IMIX_cor_restrict", "IMIX_cor"),
-  model_selection_method = c("AIC", "BIC"),
+  model_selection_method = c("BIC", "AIC"),
   alpha = 0.2,
-  verbose = FALSE
+  verbose = FALSE,
+  sort_label = TRUE
 )
 }
 \arguments{
@@ -26,8 +27,6 @@ IMIX(
 \item{data_type}{Whether the input data is the p values or z scores, default is p value}
 
 \item{mu_ini}{A list of initial values for the mean vectors for each component. If there are three data types and 8 components, then the initial is a list of 8 mean vectors, each vector is of length 3.}
-
-\item{cov_ini}{A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.}
 
 \item{p_ini}{Initial value for the proportion of the distribution in the Gaussian mixture model. A vector of length 2^d, d is the number of data types.}
 
@@ -46,6 +45,8 @@ IMIX(
 \item{alpha}{Prespecified nominal level for global FDR control, default is 0.2}
 
 \item{verbose}{Whether to print the full log-likelihood for each iteration, default is FALSE}
+
+\item{cov_ini}{A list of initial values for the covariance matrices. If there are three data types and 8 components, then the initial is a list of 8 covariance matrices, each matix is 3*3.}
 }
 \value{
 The results of IMIX
