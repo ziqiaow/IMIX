@@ -95,7 +95,7 @@ FDR_control_adaptive_imix=function(imix_output, #The result output from IMIX() f
   colnames(sig_genes_all) = c("localFDR", "class_withoutFDRcontrol", "class_FDRcontrol")
   
   for (comp in 1:(g - 1)) {
-    sig_genes_all[which(pred_group_adaptive_twoclass[[comp]] == 1), 3] = comp + 1
+    sig_genes_all[which(pred_group_adaptive_twoclass[[comp]] == 1  & sig_genes_all[,2] == (comp+1) ), 3] = comp + 1
   }
   
   sig_genes_all = data.frame(sig_genes_all)
