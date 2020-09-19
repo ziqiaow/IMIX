@@ -1,17 +1,17 @@
 ---
 title: "A quick start guide to IMIX"
 author: "Ziqiao Wang"
-date: "2020/2/6"
+date: "2020/09/18"
 output:
-  pdf_document:
-    number_sections: yes
-    toc: yes
-    toc_depth: '2'
   html_document:
     number_sections: yes
     theme: cerulean
     toc: yes
     toc_depth: 2
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: '2'
   rmarkdown::html_vignette: default
 vignette: |
   %\VignetteIndexEntry{A quick start guide to IMIX} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
@@ -182,6 +182,7 @@ select_comp1$Component_Selected_BIC
 The model selected 3 components out of 4. Then we visualize it.
 ```{r}
 plot_component(select_comp1, type = "AIC")
+plot_component(select_comp1, type = "BIC")
 ```
 
 &nbsp;
@@ -205,6 +206,7 @@ select_comp2$Component_Selected_BIC
 The model selected all 8 components. Then we visualize it.
 ```{r}
 plot_component(select_comp2, type = "AIC")
+plot_component(select_comp2, type = "BIC")
 ```
 
 &nbsp;
@@ -219,21 +221,24 @@ plot_component(select_comp2, type = "AIC")
 
 &nbsp;
 
-Initial values for the p transformed z score mixture model, this step can be skipped
+Initial values for the p transformed z score mixture model, this step can be skipped.
 
+&nbsp;
+
+Initial values for the mean vector for (null_1,alternative_1,null_2,alternative_2) in data type 1 and data type 2, here we assume for data type 1, the mean of null distribution is 0, alternative distribution is 3; for data type 2, the mean of null distribution is 0, alternative distribution is 3. 
 ```{r}
-mu_input = list() # generate an initial list for mean
-mu_input[[1]] = c(0, 0) # mean vector for component 1, data 1 null and data 2 null
-mu_input[[2]] = c(3, 0) # mean vector for component 2, data 1 nonnull and data 2 null
-mu_input[[3]] = c(0, 3) # mean vector for component 3, data 1 null and data 2 nonnull
-mu_input[[4]] = c(3, 3) # mean vector for component 4, data 1 nonnull and data 2 nonnull
+mu_input = c(0,3,0,3)
+```
 
-cov_input = list() # generate an initial list for the covariance matrices
-for (i in 1:4) {
-cov_input[[i]] = diag(3)
-}
+Initial values for the standard deviation for (null_1,alternative_1,null_2,alternative_2)
+```{r}
+sigma_input = rep(1,4)
+```
 
-p_input = rep(0.25, 4) # initial value for the proportion of components
+Initial values for the proportion of components in each data type respectively following  
+(null_1,alternative_1,null_2,alternative_2), here we assume for data type 1, the proportions of null distribution and alternative distribution are both 0.5 (adding together is 1); for data type 2, the proportions of null distribution and alternative distribution are both 0.5 (adding together is 1).
+```{r}
+p_input = rep(0.5,4)
 ```
 
 &nbsp;
@@ -245,9 +250,10 @@ test1 = IMIX(
   data_input = data_p,
   data_type = "p",
   mu_ini = mu_input,
-  cov_ini = cov_input,
+  sigma_ini = sigma_input,
   p_ini = p_input,
-  alpha = 0.1
+  alpha = 0.1,
+  model_selection_method = "AIC"
   )
 ```
 
@@ -283,7 +289,6 @@ IMIX test without specifying the initial values of the parameters
 test2 = IMIX(
   data_input = data_z,
   data_type = "z",
-  p_ini = rep(0.125, 8),
   alpha = 0.05,
   verbose = TRUE
 )
@@ -295,7 +300,7 @@ Results of example 2
 ```{r}
 test2$estimatedFDR
 test2$`AIC/BIC`
-test2$`Selected Model`
+test2$`Selected Model`  # The best fitted model selected by BIC
 str(test2$IMIX_ind)
 dim(test2$significant_genes_with_FDRcontrol)
 head(test2$significant_genes_with_FDRcontrol)
@@ -331,7 +336,7 @@ We provide two additional FDR control functions for the IMIX test result to achi
 Users can always have results controlling for FDR at a different $\alpha$ level than the output in IMIX() function, with no need to rerun the IMIX() test. Below is an R code example for data example 2 in controlling the FDR at $\alpha=0.2$. 
 
 ```{r}
-fdr_control1 = FDR_control_adaptive_imix(imix_output = test2, alpha = 0.2) 
+fdr_control1 = FDR_control_adaptive_imix(imix_output = test2, model = "IMIX_cor", alpha = 0.2) 
 # The input is the result output from IMIX() function
 fdr_control1$estimatedFDR
 head(fdr_control1$significant_genes_with_FDRcontrol)
