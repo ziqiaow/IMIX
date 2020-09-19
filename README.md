@@ -19,7 +19,7 @@ Load the package and open the package vignette:
 library("IMIX")
 vignette("IMIX")
 ```
-There will be examples for all the functions in IMIX package in [vignette](vignettes/IMIX.html). If you have any question, use help().
+There will be examples for all the functions in IMIX package in [vignette](vignettes/IMIX.pdf). If you have any question, use help().
 
 Have fun with IMIX :smiley:
 
