@@ -1,17 +1,17 @@
 ---
 title: "A quick start guide to IMIX"
-author: "Ziqiao Wang"
-date: "2020/09/18"
+author: "Ziqiao Wang and Peng Wei"
+date: "2020/09/25"
 output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: '2'
   html_document:
     number_sections: yes
     theme: cerulean
     toc: yes
     toc_depth: 2
-  pdf_document:
-    number_sections: yes
-    toc: yes
-    toc_depth: '2'
   rmarkdown::html_vignette: default
 vignette: |
   %\VignetteIndexEntry{A quick start guide to IMIX} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
