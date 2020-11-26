@@ -1,5 +1,5 @@
-#' @title IMIX-cor-twostep
-#' @description Fitting a correlated multivariate mixture model with fixed mean from estimated parameters of IMIX-ind. Input of summary statistics z scores of two or three data types.
+#' @title IMIX-Cor-Twostep
+#' @description Fitting a correlated multivariate mixture model with fixed mean from estimated parameters of IMIX-ind. Input of summary statistics z scores or p values of two or three data types.
 #'
 #' @param data_input An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
 #' @param data_type Whether the input data is the p values or z scores, default is p value
@@ -11,8 +11,19 @@
 #' @param maxiter The maximum number of iteration, default is 1000
 #' @param seed set.seed, default is 10
 #' @param verbose Whether to print the full log-likelihood for each iteration, default is FALSE
-#' @return The results of IMIX-cor-twostep
-  #' @export
+#' @return A list of the results of IMIX-cor-twostep
+#' \item{posterior prob}{Posterior probability matrix of each gene for each component}
+#' \item{Full LogLik all}{Full log-likelihood of each iteration}
+#' \item{Full MaxLogLik final}{The final log-likelihood of the converged model}
+#' \item{iterations}{Number of iterations run}
+#' \item{pi}{Estimated proportion of each component, sum to 1}
+#' \item{mu}{A list of mean vectors of each component for each data type, this is the prespecified mean}
+#' \item{cov}{A list of estimated variance-covariance matrix of each component}
+#' \item{g}{Number of components}
+#' 
+#' @export
+#' @references
+#' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
 
 IMIX_cor_twostep=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
                           data_type=c("p","z"), #Whether the input data is the p values or z scores, default is p value

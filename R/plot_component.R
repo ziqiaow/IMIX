@@ -1,12 +1,24 @@
-#' @title Plot the Component Selection
-#' @description Plot the Model selection for components based on AIC and BIC information criteria for models in IMIX
+#' @title Plot the AIC or BIC Values for Model Selection
+#' @description Plot the result output of model selection for components based on AIC and BIC values in IMIX
 #'
 #' @import ggplot2
 #' @param res_select Result output from function model_selection_component()
 #' @param type Which information criteria to use for plot
 #' @return Plot for the model selection of components
-#' 
 #' @export
+#' @references
+#' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
+#' @examples
+#' # First load the data
+#' data("data_p")
+#' 
+#' # Perform model selections on the data
+#' select_comp1 <- model_selection_component(data_p, data_type = "p", seed = 20)
+#' 
+#' # Make a plot for BIC values
+#' plot_component(select_comp1, type = "BIC")
+#' 
+
 
 plot_component=function(res_select, # Result output from function model_selection_component()
                         type=c("AIC","BIC") # Which information criteria to use for plot

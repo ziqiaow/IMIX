@@ -1,5 +1,5 @@
-#' @title IMIX-cor-restrict
-#' @description Fitting a correlated multivariate mixture model with restrictions on the mean. Input of summary statistics z scores of two or three data types.
+#' @title IMIX-Cor-Restrict
+#' @description Fitting a correlated multivariate mixture model with restrictions on the mean. Input of summary statistics z scores or p values of two or three data types.
 #'
 #' @param data_input An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
 #' @param data_type Whether the input data is the p values or z scores, default is p value
@@ -10,8 +10,19 @@
 #' @param maxiter The maximum number of iteration, default is 1000
 #' @param seed set.seed, default is 10
 #' @param verbose Whether to print the full log-likelihood for each iteration, default is FALSE
-#' @return The results of IMIX-cor-restrict
-  #' @export
+#' @return A list of the results of IMIX-cor-restrict
+#' \item{posterior prob}{Posterior probability of each gene for each component}
+#' \item{Full LogLik all}{Full log-likelihood of each iteration}
+#' \item{Full MaxLogLik final}{The final log-likelihood of the converged model}
+#' \item{iterations}{Number of iterations run}
+#' \item{pi}{Estimated proportion of each component, sum to 1}
+#' \item{mu}{Estimated mean for the null and alternative of each data type: for two data types (mu10,mu11,mu20,mu21), three data types (mu10,mu11,mu20,mu21,mu30,mu31), mui0 is the null for data type i, mui1 is the alternative for data type i.}
+#' \item{cov}{A list of estimated variance-covariance matrix of each component}
+#'   
+#' @export
+#' @references
+#' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
+
 
 #Only specifies the mu, let the sigmas be unconstrained
 IMIX_cor_restrict=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.

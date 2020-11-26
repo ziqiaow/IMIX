@@ -1,5 +1,5 @@
 #' @title Model Selection
-#' @description Model selection based on AIC and BIC information criteria for models in IMIX
+#' @description Model selection for sub-model outputs in IMIX, this step is to calculate the AIC or BIC values for one model
 #'
 #' @param loglik Full log likelihood, result output from IMIX or a sub model in IMIX: `Full MaxLogLik final`
 #' @param n Total number of genes
@@ -8,6 +8,26 @@
 #' @param modelname The model name, default is IMIX_ind
 #' @return AIC/BIC values of the target model
 #' @export
+#' @references
+#' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
+#' @examples 
+#' # First load the data
+#' data("data_p")
+#' 
+#' # Specify the initial values
+#' mu_input <- c(0,3,0,3)
+#' sigma_input <- rep(1,4)
+#' p_input <- rep(0.5,4)
+#' 
+#' # Fit the IMIX model
+#' test1 <- IMIX(data_input = data_p,data_type = "p",mu_ini = mu_input,sigma_ini = sigma_input,
+#' p_ini = p_input,alpha = 0.1,model_selection_method = "AIC")
+#' 
+#' # Calculate the AIC and BIC values for IMIX_ind with two data types and four components
+#' model_selection(test1$IMIX_ind$`Full MaxLogLik final`,
+#' n=dim(test1$IMIX_ind$`posterior prob`)[1],g=4,d=2, "IMIX_ind")
+
+
 
 model_selection=function(loglik, #Full log likelihood, result output: `Full MaxLogLik final`
                          n, #Total number of genes
@@ -44,7 +64,7 @@ model_selection=function(loglik, #Full log likelihood, result output: `Full MaxL
 
 
 #' @title Component Selection
-#' @description Model selection for components based on AIC and BIC information criteria for models in IMIX
+#' @description Model selection for components based on AIC and BIC values for models in IMIX
 #'
 #' @import mclust
 #' @param data_input An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
@@ -54,8 +74,25 @@ model_selection=function(loglik, #Full log likelihood, result output: `Full MaxL
 #' @param seed set.seed, default is 10
 #' @param verbose Whether to print the full log-likelihood for each iteration, default is FALSE
 #' @return Selected number of components based on AIC and BIC
-#' 
+#' \item{Component_Selected_AIC}{Selected number of components by AIC with the smallest AIC value among all components and models}
+#' \item{Component_Selected_BIC}{Selected number of components by BIC with the smallest BIC value among all components and models}
+#' \item{AIC/BIC}{The AIC and BIC values for all components for IMIX_ind_unrestrict, IMIX_cor_twostep, and IMIX_cor}
+#' \item{IMIX_ind_unrestrict}{A list of the IMIX_ind_unrestrict for all components 1,2,...2^d, this step was fitted using R package "Mclust", more details of the output can be found there}
+#' \item{IMIX_cor_twostep}{A list of the IMIX_cor_twostep for all components 1,2,...2^d, here, the mean is the estimated value of IMIX_ind_unrestrict}
+#' \item{IMIX_cor}{A list of the IMIX_cor_twostep for all components 1,2,...2^d}
 #' @export
+#' @references
+#' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
+#' 
+#' Scrucca, Luca, Michael Fop, T. Brendan Murphy, and Adrian E. Raftery. 2016. “mclust 5: Clustering, Classification and Density Estimation Using Gaussian Finite Mixture Models.” The R Journal 8 (1): 289–317. \url{https://doi.org/10.32614/RJ-2016-021}.
+#' @examples
+#' 
+#' # First load the data
+#' data("data_p")
+#' 
+#' # Perform model selections on the data
+#' select_comp1 = model_selection_component(data_p, data_type = "p", seed = 20)
+
 
 model_selection_component=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
                                    data_type=c("p","z"), #Whether the input data is the p values or z scores, default is p value

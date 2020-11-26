@@ -1,5 +1,5 @@
 #' @title IMIX
-#' @description Fitting a multivariate mixture model framework, model selection for the best model, and adaptive procedure for FDR control. Input of summary statistics z scores of two or three data types.
+#' @description Fitting a multivariate mixture model framework, model selection for the best model, and adaptive procedure for FDR control. Input of summary statistics z scores or p values of two or three data types.
 #'
 #' @param data_input An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
 #' @param data_type Whether the input data is the p values or z scores, default is p value
@@ -15,9 +15,44 @@
 #' @param alpha Prespecified nominal level for global FDR control, default is 0.2
 #' @param verbose Whether to print the full log-likelihood for each iteration, default is FALSE
 #' @param sort_label Whether to sort the component labels in case component labels switched after convergence of the initial values, default is TRUE, notice that if the users chooose not to, they might need to check the interested IMIX model for the converged mean for the true component labels and perform the adaptive FDR control separately for an acurate result
-#' @return The results of IMIX
+#' @return A list of results of IMIX
+#'  \item{IMIX_ind}{Results of IMIX_ind, assuming all data types are independent}
+#'  \item{IMIX_cor_twostep}{Results of IMIX_cor_twostep, by default the mean is the estimated value of IMIX_ind. If the users are interested to use another mean input, they could directly use function IMIX_cor_twostep and specify the mean}
+#'  \item{IMIX_cor}{Results of IMIX_cor}
+#'  \item{IMIX_cor_restrict}{Results of IMIX_cor_restrict}
+#'  \item{AIC/BIC}{The AIC and BIC values of all fitted models}
+#'  \item{Selected Model}{The model with the smallest AIC or BIC value, this is determined by user specifications in the function input "model_selection_method", by default is BIC}
+#'  \item{significant_genes_with_FDRcontrol}{The output of each gene ordered by the components based on FDR control and within each component ordered by the local FDR, "localFDR" is 1-posterior probability of each gene in the component based on the maximum posterior probability, "class_withoutFDRcontrol" is the classified component based on maximum posterior probability, "class_FDRcontrol" is the classified component based on the across-data-type FDR control at alpha level}
+#'  \item{estimatedFDR}{The estimated marginal FDR value for each component starting from component 2 (component 1 is the global null)}
+#'  \item{alpha}{Prespecified nominal level for the across-data-type FDR control}
+#'  
 #' @export
-
+#' 
+#' @references
+#' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
+#' 
+#' Benaglia, Tatiana, Didier Chauveau, David R. Hunter, and Derek Young. 2009. “mixtools: An R Package for Analyzing Finite Mixture Models.” Journal of Statistical Software 32 (6): 1–29. \url{http://www.jstatsoft.org/v32/i06/}.
+#' @examples 
+#' # First load the data
+#' data("data_p")
+#' 
+#' # Specify initial values (this step could be omitted)
+#' mu_input <- c(0,3,0,3)
+#' sigma_input <- rep(1,4)
+#' p_input <- rep(0.5,4)
+#' 
+#' # Fit IMIX model
+#' test1 <- IMIX(data_input = data_p,data_type = "p",mu_ini = mu_input,sigma_ini = sigma_input,
+#' p_ini = p_input,alpha = 0.1,model_selection_method = "AIC")
+#' 
+#' #Results
+#' test1$estimatedFDR # Print the estimated across-data-type FDR for each component
+#' test1$`AIC/BIC` # The AIC and BIC values for each model
+#' test1$`Selected Model` # The best fitted model selected by AIC
+#' str(test1$IMIX_cor_twostep) # The output of IMIX_cor_twostep
+#' dim(test1$significant_genes_with_FDRcontrol) # The output of genes with local FDR values and classified components
+#' head(test1$significant_genes_with_FDRcontrol)
+#' 
 IMIX=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
               data_type=c("p","z"), #Whether the input data is the p values or z scores, default is p value
               mu_ini=NULL, #Initial values for the mean of the independent mixture model distribution. A vector of length 2*d, d is number of data types. Needs to be in a special format: for example, if d=3, needs to be in the format of (null_1,alternative_1,null_2,alternative_2,null_3,alternative_3).
