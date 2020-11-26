@@ -2,7 +2,7 @@
 % Please edit documentation in R/IMIX_cor.R
 \name{IMIX_cor}
 \alias{IMIX_cor}
-\title{IMIX-cor}
+\title{IMIX-Cor}
 \usage{
 IMIX_cor(
   data_input,
@@ -39,8 +39,19 @@ IMIX_cor(
 \item{verbose}{Whether to print the full log-likelihood for each iteration, default is FALSE}
 }
 \value{
-The results of IMIX-cor
+A list of the results of IMIX-cor
+\item{posterior prob}{Posterior probability matrix of each gene for each component}
+\item{Full LogLik all}{Full log-likelihood of each iteration}
+\item{Full MaxLogLik final}{The final log-likelihood of the converged model}
+\item{iterations}{Number of iterations run}
+\item{pi}{Estimated proportion of each component, sum to 1}
+\item{mu}{A list of estimated mean vectors of each component for each data type, each list corresponds to one component}
+\item{cov}{A list of estimated variance-covariance matrix of each component}
+\item{g}{Number of components}
 }
 \description{
-Fitting a correlated multivariate mixture model. Input of summary statistics z scores of two or three data types.
+Fitting a correlated multivariate mixture model. Input of summary statistics z scores or p values of two or three data types.
+}
+\references{
+Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
 }

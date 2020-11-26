@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_component.R
 \name{plot_component}
 \alias{plot_component}
-\title{Plot the Component Selection}
+\title{Plot the AIC or BIC Values for Model Selection}
 \usage{
 plot_component(res_select, type = c("AIC", "BIC"))
 }
@@ -15,5 +15,19 @@ plot_component(res_select, type = c("AIC", "BIC"))
 Plot for the model selection of components
 }
 \description{
-Plot the Model selection for components based on AIC and BIC information criteria for models in IMIX
+Plot the result output of model selection for components based on AIC and BIC values in IMIX
+}
+\examples{
+# First load the data
+data("data_p")
+
+# Perform model selections on the data
+select_comp1 <- model_selection_component(data_p, data_type = "p", seed = 20)
+
+# Make a plot for BIC values
+plot_component(select_comp1, type = "BIC")
+
+}
+\references{
+Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
 }

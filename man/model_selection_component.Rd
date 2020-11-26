@@ -28,7 +28,26 @@ model_selection_component(
 }
 \value{
 Selected number of components based on AIC and BIC
+\item{Component_Selected_AIC}{Selected number of components by AIC with the smallest AIC value among all components and models}
+\item{Component_Selected_BIC}{Selected number of components by BIC with the smallest BIC value among all components and models}
+\item{AIC/BIC}{The AIC and BIC values for all components for IMIX_ind_unrestrict, IMIX_cor_twostep, and IMIX_cor}
+\item{IMIX_ind_unrestrict}{A list of the IMIX_ind_unrestrict for all components 1,2,...2^d, this step was fitted using R package "Mclust", more details of the output can be found there}
+\item{IMIX_cor_twostep}{A list of the IMIX_cor_twostep for all components 1,2,...2^d, here, the mean is the estimated value of IMIX_ind_unrestrict}
+\item{IMIX_cor}{A list of the IMIX_cor_twostep for all components 1,2,...2^d}
 }
 \description{
-Model selection for components based on AIC and BIC information criteria for models in IMIX
+Model selection for components based on AIC and BIC values for models in IMIX
+}
+\examples{
+
+# First load the data
+data("data_p")
+
+# Perform model selections on the data
+select_comp1 = model_selection_component(data_p, data_type = "p", seed = 20)
+}
+\references{
+Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
+
+Scrucca, Luca, Michael Fop, T. Brendan Murphy, and Adrian E. Raftery. 2016. “mclust 5: Clustering, Classification and Density Estimation Using Gaussian Finite Mixture Models.” The R Journal 8 (1): 289–317. \url{https://doi.org/10.32614/RJ-2016-021}.
 }

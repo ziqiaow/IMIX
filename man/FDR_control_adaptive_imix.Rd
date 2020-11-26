@@ -2,7 +2,7 @@
 % Please edit documentation in R/FDR_control_adaptive.R
 \name{FDR_control_adaptive_imix}
 \alias{FDR_control_adaptive_imix}
-\title{The adaptive procedure for global FDR control for IMIX output}
+\title{The Adaptive Procedure for Across-Data-Type FDR Control for IMIX Output}
 \usage{
 FDR_control_adaptive_imix(
   imix_output,
@@ -11,7 +11,7 @@ FDR_control_adaptive_imix(
 )
 }
 \arguments{
-\item{imix_output}{The result output from IMIX() function, result controled at alpha level only for one component each time.}
+\item{imix_output}{The result output from IMIX() function, result controlled at alpha level only for one component each time.}
 
 \item{model}{The target model among "IMIX_ind","IMIX_cor_twostep","IMIX_cor_restrict", and "IMIX_cor". Default is IMIX_ind.}
 
@@ -19,7 +19,56 @@ FDR_control_adaptive_imix(
 }
 \value{
 The estimated mFDR for the target component and classify the genes in each component after FDR control at alpha level.
+\item{significant_genes_with_FDRcontrol}{The output of each gene ordered by the components based on FDR control and within each component ordered by the local FDR, "localFDR" is 1-posterior probability of each gene in the component based on the maximum posterior probability, "class_withoutFDRcontrol" is the classified component based on maximum posterior probability, "class_FDRcontrol" is the classified component based on the across-data-type FDR control at alpha level}
+\item{estimatedFDR}{The estimated marginal FDR value for each component starting from component 2 (component 1 is the global null)}
+\item{alpha}{Prespecified nominal level for the across-data-type FDR control}
 }
 \description{
-The adaptive procedure for global FDR control based on the output from IMIX models, this can be directly performed by IMIX function, however, if you are interested in other alpha levels, this function would be useful to avoid rerun the IMIX().
+The adaptive procedure for across-data-type FDR control based on the output from IMIX models, this can be directly performed by IMIX function, however, if the user is interested in other alpha levels, this function would be useful to avoid rerun the IMIX().
+}
+\examples{
+# First generate the data
+library(MASS)
+N <- 1000
+truelabel <- sample(1:8,prob = rep(0.125, 8),size = N,replace = TRUE)
+mu1 <- c(0, 5);mu2 <- c(0, 5);mu3 <- c(0, 5)
+mu1_mv <- c(mu1[1], mu2[1], mu3[1]);mu2_mv <- c(mu1[2], mu2[1], mu3[1]);
+mu3_mv <- c(mu1[1], mu2[2], mu3[1]);mu4_mv <- c(mu1[1], mu2[1], mu3[2]);
+mu5_mv <- c(mu1[2], mu2[2], mu3[1]);mu6_mv <- c(mu1[2], mu2[1], mu3[2])
+mu7_mv <- c(mu1[1], mu2[2], mu3[2]);mu8_mv <- c(mu1[2], mu2[2], mu3[2])
+cov_sim <- list()
+for (i in 1:8) {
+  cov_sim[[i]] <- diag(3)
+  }
+data_z <- array(0, c(N, 3))
+data_z[which(truelabel == 1),] <- mvrnorm(n = length(which(truelabel == 1)),
+mu = mu1_mv,Sigma = cov_sim[[1]],tol = 1e-6,empirical = FALSE)
+data_z[which(truelabel == 2),] <- mvrnorm(n = length(which(truelabel == 2)),
+mu = mu2_mv,Sigma = cov_sim[[2]],tol = 1e-6,empirical = FALSE)
+data_z[which(truelabel == 3),] <- mvrnorm(n = length(which(truelabel == 3)),
+mu = mu3_mv,Sigma = cov_sim[[3]],tol = 1e-6,empirical = FALSE)
+data_z[which(truelabel == 4),] <- mvrnorm(n = length(which(truelabel == 4)),
+mu = mu4_mv,Sigma = cov_sim[[4]],tol = 1e-6,empirical = FALSE)
+data_z[which(truelabel == 5),] <- mvrnorm(n = length(which(truelabel == 5)),
+mu = mu5_mv,Sigma = cov_sim[[5]],tol = 1e-6,empirical = FALSE)
+data_z[which(truelabel == 6),] <- mvrnorm(n = length(which(truelabel == 6)),
+mu = mu6_mv,Sigma = cov_sim[[6]],tol = 1e-6,empirical = FALSE)
+data_z[which(truelabel == 7),] <- mvrnorm(n = length(which(truelabel == 7)),
+mu = mu7_mv,Sigma = cov_sim[[7]],tol = 1e-6,empirical = FALSE)
+data_z[which(truelabel == 8),] <- mvrnorm(n = length(which(truelabel == 8)),
+mu = mu8_mv,Sigma = cov_sim[[8]],tol = 1e-6,empirical = FALSE)
+rownames(data_z) <- paste0("gene", 1:N)
+colnames(data_z) <- c("z.methy", "z.ge", "z.cnv")
+dim(data_z)
+
+# Fit the model
+test2 <- IMIX(data_input = data_z,data_type = "z",alpha = 0.05,verbose = TRUE)
+
+# Adaptive FDR control at alpha 0.2 for IMIX_cor model
+fdr_control2 <- FDR_control_adaptive_imix(imix_output = test2, model = "IMIX_cor", 
+alpha = 0.2) 
+
+}
+\references{
+Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
 }

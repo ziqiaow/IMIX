@@ -28,5 +28,25 @@ model_selection(
 AIC/BIC values of the target model
 }
 \description{
-Model selection based on AIC and BIC information criteria for models in IMIX
+Model selection for sub-model outputs in IMIX, this step is to calculate the AIC or BIC values for one model
+}
+\examples{
+# First load the data
+data("data_p")
+
+# Specify the initial values
+mu_input <- c(0,3,0,3)
+sigma_input <- rep(1,4)
+p_input <- rep(0.5,4)
+
+# Fit the IMIX model
+test1 <- IMIX(data_input = data_p,data_type = "p",mu_ini = mu_input,sigma_ini = sigma_input,
+p_ini = p_input,alpha = 0.1,model_selection_method = "AIC")
+
+# Calculate the AIC and BIC values for IMIX_ind with two data types and four components
+model_selection(test1$IMIX_ind$`Full MaxLogLik final`,
+n=dim(test1$IMIX_ind$`posterior prob`)[1],g=4,d=2, "IMIX_ind")
+}
+\references{
+Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
 }
