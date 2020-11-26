@@ -1,18 +1,22 @@
 ---
 title: "A quick start guide to IMIX"
-author: "Ziqiao Wang and Peng Wei"
-date: "2020/09/25"
+author: "Ziqiao Wang"
+date: "2020/11/25"
 output:
-  pdf_document:
-    number_sections: yes
-    toc: yes
-    toc_depth: '2'
   html_document:
     number_sections: yes
     theme: cerulean
     toc: yes
     toc_depth: 2
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: '2'
   rmarkdown::html_vignette: default
+nocite: |
+  @*
+bibliography: References.bib
+biblio-style: apalike
 vignette: |
   %\VignetteIndexEntry{A quick start guide to IMIX} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
 ---
@@ -25,7 +29,7 @@ vignette: |
 &nbsp;
 &nbsp;
 
-IMIX is an R package for integration of multiple genomics data types to investigate the associations between genes and a specific outcome, including binary, continuous, survival, and categorical outcomes based on finite multivariate Gaussian mixture modelling using summary statistics. The input is summary statistics for each data type including either p-value or z-score. We support summary statistics of data outputs such as DNA methylation, copy number variation(CNV), and gene expression (RNAseq/microarray) at gene level. Nonethelss, IMIX is as flexible as it can be extended to other molecular level as long as the summary statistics of the multiple data types are coherent with each other. It provides features to select the true number of components behind the data, parameter estimation for the summary statistics via EM algorithm. The most important feature is that it evaluates the data through different covariance and mean structures of mixture modelling and selects the overall best fitting model, which in turn provides the oracle output while controlling for the global false discovery rate (FDR) at a user specified level. 
+IMIX is an R package for integration of multiple genomics data types to investigate the associations between genes and a specific outcome, including binary, continuous, survival, and categorical outcomes based on finite multivariate Gaussian mixture modelling using summary statistics. The input is summary statistics for each data type including either p-value or z-score. We support summary statistics of data outputs such as DNA methylation, copy number variation(CNV), and gene expression (RNAseq/microarray) at gene level. Nonethelss, IMIX is as flexible as it can be extended to other molecular level as long as the summary statistics of the multiple data types are coherent with each other. It provides features to select the true number of components behind the data, parameter estimation for the summary statistics via EM algorithm. The most important feature is that it evaluates the data through different covariance and mean structures of mixture modelling and selects the overall best fitting model, which in turn provides the oracle output while controlling for the across-data-type false discovery rate (FDR) at a user specified level. 
 
 This document gives a quick tour of IMIX functionalities. The tasks addressed in this package include assessment of the true number of components with respect to the data, identification of interesting genes for each data type combination, FDR control, and plotting functionality. See help(package="IMIX") for further details and references provided by citation("IMIX").
 
@@ -68,78 +72,78 @@ The dimension is $1000 \times 3$.
 
 ```{r}
 library(MASS)
-N = 1000
+N <- 1000
 truelabel <- sample(1:8,
                     prob = rep(0.125, 8),
                     size = N,
                     replace = TRUE)
-mu1 = c(0, 5)
-mu2 = c(0, 5)
-mu3 = c(0, 5)
-mu1_mv = c(mu1[1], mu2[1], mu3[1])
-mu2_mv = c(mu1[2], mu2[1], mu3[1])
-mu3_mv = c(mu1[1], mu2[2], mu3[1])
-mu4_mv = c(mu1[1], mu2[1], mu3[2])
-mu5_mv = c(mu1[2], mu2[2], mu3[1])
-mu6_mv = c(mu1[2], mu2[1], mu3[2])
-mu7_mv = c(mu1[1], mu2[2], mu3[2])
-mu8_mv = c(mu1[2], mu2[2], mu3[2])
+mu1 <- c(0, 5)
+mu2 <- c(0, 5)
+mu3 <- c(0, 5)
+mu1_mv <- c(mu1[1], mu2[1], mu3[1])
+mu2_mv <- c(mu1[2], mu2[1], mu3[1])
+mu3_mv <- c(mu1[1], mu2[2], mu3[1])
+mu4_mv <- c(mu1[1], mu2[1], mu3[2])
+mu5_mv <- c(mu1[2], mu2[2], mu3[1])
+mu6_mv <- c(mu1[2], mu2[1], mu3[2])
+mu7_mv <- c(mu1[1], mu2[2], mu3[2])
+mu8_mv <- c(mu1[2], mu2[2], mu3[2])
 
-cov_sim = list()
+cov_sim <- list()
 for (i in 1:8) {
-  cov_sim[[i]] = diag(3)
+  cov_sim[[i]] <- diag(3)
 }
-data_z = array(0, c(N, 3))
-data_z[which(truelabel == 1),] = mvrnorm(
+data_z <- array(0, c(N, 3))
+data_z[which(truelabel == 1),] <- mvrnorm(
   n = length(which(truelabel == 1)),
   mu = mu1_mv,
   Sigma = cov_sim[[1]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 2),] = mvrnorm(
+data_z[which(truelabel == 2),] <- mvrnorm(
   n = length(which(truelabel == 2)),
   mu = mu2_mv,
   Sigma = cov_sim[[2]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 3),] = mvrnorm(
+data_z[which(truelabel == 3),] <- mvrnorm(
   n = length(which(truelabel == 3)),
   mu = mu3_mv,
   Sigma = cov_sim[[3]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 4),] = mvrnorm(
+data_z[which(truelabel == 4),] <- mvrnorm(
   n = length(which(truelabel == 4)),
   mu = mu4_mv,
   Sigma = cov_sim[[4]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 5),] = mvrnorm(
+data_z[which(truelabel == 5),] <- mvrnorm(
   n = length(which(truelabel == 5)),
   mu = mu5_mv,
   Sigma = cov_sim[[5]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 6),] = mvrnorm(
+data_z[which(truelabel == 6),] <- mvrnorm(
   n = length(which(truelabel == 6)),
   mu = mu6_mv,
   Sigma = cov_sim[[6]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 7),] = mvrnorm(
+data_z[which(truelabel == 7),] <- mvrnorm(
   n = length(which(truelabel == 7)),
   mu = mu7_mv,
   Sigma = cov_sim[[7]],
   tol = 1e-6,
   empirical = FALSE
 )
-data_z[which(truelabel == 8),] = mvrnorm(
+data_z[which(truelabel == 8),] <- mvrnorm(
   n = length(which(truelabel == 8)),
   mu = mu8_mv,
   Sigma = cov_sim[[8]],
@@ -147,8 +151,8 @@ data_z[which(truelabel == 8),] = mvrnorm(
   empirical = FALSE
 )
 
-rownames(data_z) = paste0("gene", 1:N)
-colnames(data_z) = c("z.methy", "z.ge", "z.cnv")
+rownames(data_z) <- paste0("gene", 1:N)
+colnames(data_z) <- c("z.methy", "z.ge", "z.cnv")
 dim(data_z)
 
 ```
@@ -165,7 +169,7 @@ dim(data_z)
 &nbsp;
 
 ```{r}
-select_comp1 = model_selection_component(data_p, data_type = "p", seed = 20)
+select_comp1 <- model_selection_component(data_p, data_type = "p", seed = 20)
 ```
 
 &nbsp;
@@ -194,7 +198,7 @@ plot_component(select_comp1, type = "BIC")
 
 
 ```{r}
-select_comp2 = model_selection_component(data_z, data_type = "z")
+select_comp2 <- model_selection_component(data_z, data_type = "z")
 names(select_comp2)
 select_comp2$Component_Selected_AIC
 select_comp2$Component_Selected_BIC
@@ -227,18 +231,18 @@ Initial values for the p transformed z score mixture model, this step can be ski
 
 Initial values for the mean vector for (null_1,alternative_1,null_2,alternative_2) in data type 1 and data type 2, here we assume for data type 1, the mean of null distribution is 0, alternative distribution is 3; for data type 2, the mean of null distribution is 0, alternative distribution is 3. 
 ```{r}
-mu_input = c(0,3,0,3)
+mu_input <- c(0,3,0,3)
 ```
 
 Initial values for the standard deviation for (null_1,alternative_1,null_2,alternative_2)
 ```{r}
-sigma_input = rep(1,4)
+sigma_input <- rep(1,4)
 ```
 
 Initial values for the proportion of components in each data type respectively following  
 (null_1,alternative_1,null_2,alternative_2), here we assume for data type 1, the proportions of null distribution and alternative distribution are both 0.5 (adding together is 1); for data type 2, the proportions of null distribution and alternative distribution are both 0.5 (adding together is 1).
 ```{r}
-p_input = rep(0.5,4)
+p_input <- rep(0.5,4)
 ```
 
 &nbsp;
@@ -246,7 +250,7 @@ p_input = rep(0.5,4)
 
 Start the test
 ```{r}
-test1 = IMIX(
+test1 <- IMIX(
   data_input = data_p,
   data_type = "p",
   mu_ini = mu_input,
@@ -261,7 +265,7 @@ test1 = IMIX(
 
 Result outputs of example 1
 ```{r}
-test1$estimatedFDR # Print the estimated global FDR for each component
+test1$estimatedFDR # Print the estimated across-data-type FDR for each component
 test1$`AIC/BIC` # The AIC and BIC values for each model
 test1$`Selected Model` # The best fitted model selected by AIC
 str(test1$IMIX_cor_twostep)
@@ -272,7 +276,7 @@ head(test1$significant_genes_with_FDRcontrol)
 &nbsp;
 &nbsp;
 
-The results for each gene, this includes localFDR, classes with global FDR control at $\alpha=0.1$ and classes without global FDR control. Here the class labels corresponds to 1=(ge-,cnv-),2=(ge+,cnv-),3=(ge-,cnv+),4=(ge+,cnv+). We could see that component 3 is missing here after controlling for FDR, and there are only 9 genes in component 3 before we control for FDR. This result is coherent with the model selection result.
+The results for each gene, this includes localFDR, classes with across-data-type FDR control at $\alpha=0.1$ and classes without across-data-type FDR control. Here the class labels corresponds to 1=(ge-,cnv-),2=(ge+,cnv-),3=(ge-,cnv+),4=(ge+,cnv+). We could see that component 3 is missing here after controlling for FDR, and there are only 9 genes in component 3 before we control for FDR. This result is coherent with the model selection result.
 
 &nbsp;
 &nbsp;
@@ -286,7 +290,7 @@ IMIX test without specifying the initial values of the parameters
 &nbsp;
 
 ```{r}
-test2 = IMIX(
+test2 <- IMIX(
   data_input = data_z,
   data_type = "z",
   alpha = 0.05,
@@ -336,7 +340,7 @@ We provide two additional FDR control functions for the IMIX test result to achi
 Users can always have results controlling for FDR at a different $\alpha$ level than the output in IMIX() function, with no need to rerun the IMIX() test. Below is an R code example for data example 2 in controlling the FDR at $\alpha=0.2$. 
 
 ```{r}
-fdr_control1 = FDR_control_adaptive_imix(imix_output = test2, model = "IMIX_cor", alpha = 0.2) 
+fdr_control1 <- FDR_control_adaptive_imix(imix_output = test2, model = "IMIX_cor", alpha = 0.2) 
 # The input is the result output from IMIX() function
 fdr_control1$estimatedFDR
 head(fdr_control1$significant_genes_with_FDRcontrol)
@@ -356,11 +360,11 @@ Users can always have results controlling for FDR for a combination of component
 
 ```{r}
 test1$`Selected Model`
-lfdr_ge_combined = 1 - (test1$IMIX_cor_twostep$`posterior prob`[,2] + 
+lfdr_ge_combined <- 1 - (test1$IMIX_cor_twostep$`posterior prob`[,2] + 
                           test1$IMIX_cor_twostep$`posterior prob`[,4]) 
 # Class 2: (ge+,cnv-); class 4: (ge+,cnv+)
-names(lfdr_ge_combined) = rownames(test1$IMIX_cor_twostep$`posterior prob`)
-fdr_control2 = FDR_control_adaptive(lfdr = lfdr_ge_combined, alpha = 0.2)
+names(lfdr_ge_combined) <- rownames(test1$IMIX_cor_twostep$`posterior prob`)
+fdr_control2 <- FDR_control_adaptive(lfdr = lfdr_ge_combined, alpha = 0.2)
 fdr_control2$estimatedFDR
 table(fdr_control2$significant_genes_with_FDRcontrol)
 ```
@@ -377,3 +381,6 @@ The result output fdr_control2 shows that 693 genes (indicator 1) are associated
 ```{r}
 sessionInfo()
 ```
+
+
+# References
