@@ -9,6 +9,7 @@
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
 #' @examples
+#' \dontrun{
 #' # First load the data
 #' data("data_p")
 #' 
@@ -17,7 +18,7 @@
 #' 
 #' # Make a plot for BIC values
 #' plot_component(select_comp1, type = "BIC")
-#' 
+#' }
 
 
 plot_component=function(res_select, # Result output from function model_selection_component()

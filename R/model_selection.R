@@ -12,6 +12,7 @@
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
 #' @examples 
+#' \dontrun{
 #' # First load the data
 #' data("data_p")
 #' 
@@ -27,6 +28,7 @@
 #' # Calculate the AIC and BIC values for IMIX_ind with two data types and four components
 #' model_selection(test1$IMIX_ind$`Full MaxLogLik final`,
 #' n=dim(test1$IMIX_ind$`posterior prob`)[1],g=4,d=2, "IMIX_ind")
+#' }
 
 
 
@@ -89,12 +91,13 @@ model_selection=function(loglik, #Full log likelihood, result output: `Full MaxL
 #' 
 #' Scrucca, Luca, Michael Fop, T. Brendan Murphy, and Adrian E. Raftery. 2016. “mclust 5: Clustering, Classification and Density Estimation Using Gaussian Finite Mixture Models.” The R Journal 8 (1): 289–317. \url{https://doi.org/10.32614/RJ-2016-021}.
 #' @examples
-#' 
+#' \dontrun{
 #' # First load the data
 #' data("data_p")
 #' 
 #' # Perform model selections on the data
 #' select_comp1 = model_selection_component(data_p, data_type = "p", seed = 20)
+#' }
 
 
 model_selection_component=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
