@@ -11,14 +11,14 @@ output:
   pdf_document:
     number_sections: yes
     toc: yes
-    toc_depth: '2'
+    toc_depth: 2
   rmarkdown::html_vignette: default
 nocite: |
   @*
 bibliography: References.bib
 biblio-style: apalike
 vignette: |
-  %\VignetteIndexEntry{A quick start guide to IMIX} %\VignetteEngine{knitr::rmarkdown} \usepackage[utf8]{inputenc}
+  %\VignetteIndexEntry{A quick start guide to IMIX} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 ---
 
 &nbsp;
