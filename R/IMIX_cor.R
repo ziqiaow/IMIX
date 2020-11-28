@@ -21,6 +21,8 @@
 #' \item{cov}{A list of estimated variance-covariance matrix of each component}
 #' \item{g}{Number of components}
 #' 
+#' @importFrom stats qnorm
+#' @importFrom utils tail
 #' @export
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
@@ -38,7 +40,7 @@ IMIX_cor=function(data_input, #An n x d data frame or matrix of the summary stat
                   verbose=FALSE #Whether to print the full log-likelihood for each iteration, default is FALSE
 ){
   data_type <- match.arg(data_type)
-  if(data_type=="p"){data_input=apply(data_input,2,function(x) qnorm(x,lower.tail=F))}
+  if(data_type=="p"){data_input=apply(data_input,2,function(x) stats::qnorm(x,lower.tail=F))}
   
  
   n_data=dim(data_input)[2]
@@ -111,7 +113,7 @@ IMIX_cor=function(data_input, #An n x d data frame or matrix of the summary stat
 
   }
 
-  loglik.approx <- tail(Q, n=1)
+  loglik.approx <- utils::tail(Q, n=1)
   pred.values=proportion
   colnames(pred.values)=paste0("component",1:g)
   rownames(pred.values)=rownames(data_input)

@@ -21,6 +21,8 @@
 #' \item{cov}{A list of estimated variance-covariance matrix of each component}
 #' \item{g}{Number of components}
 #' 
+#' @importFrom stats qnorm
+#' @importFrom utils tail
 #' @export
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
@@ -38,7 +40,7 @@ IMIX_cor_twostep=function(data_input, #An n x d data frame or matrix of the summ
 ){
  
   data_type <- match.arg(data_type)
-  if(data_type=="p"){data_input=apply(data_input,2,function(x) qnorm(x,lower.tail=F))}
+  if(data_type=="p"){data_input=apply(data_input,2,function(x) stats::qnorm(x,lower.tail=F))}
   
   n_data=dim(data_input)[2]
   if(length(cov)!=g | length(mu_vec)!=g | length(mu_vec[[1]])!=n_data | dim(cov[[1]])[1]!=n_data | dim(cov[[1]])[2]!=n_data | length(p)!=g | g>(2^n_data) ) {cat(crayon::red("Error: The dimensions of initial values don't match with each other!")); return(1)}
@@ -104,7 +106,7 @@ IMIX_cor_twostep=function(data_input, #An n x d data frame or matrix of the summ
 
   }
 
-  loglik.approx <- tail(Q, n=1)
+  loglik.approx <- utils::tail(Q, n=1)
   pred.values=proportion
   colnames(pred.values)=paste0("component",1:g)
   rownames(pred.values)=rownames(data_input)

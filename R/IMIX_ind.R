@@ -19,6 +19,8 @@
 #' \item{mu}{Estimated mean for the null and alternative of each data type: for two data types (mu10,mu11,mu20,mu21), three data types (mu10,mu11,mu20,mu21,mu30,mu31), mui0 is the null for data type i, mui1 is the alternative for data type i.}
 #' \item{sigma}{Estimated standard deviation for the null and alternative of each data type: for two data types (sigma10,sigma11,sigma20,sigma21), three data types (sigma10,sigma11,sigma20,sigma21,sigma30,sigma31), sigmai0 is the null for data type i, sigmai1 is the alternative for data type i.}
 #' 
+#' @importFrom stats qnorm dnorm
+#' @importFrom utils tail
 #' @export
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
@@ -36,7 +38,7 @@ IMIX_ind=function(data_input, #An n x d data frame or matrix of the summary stat
   
   
   data_type <- match.arg(data_type)
-  if(data_type=="p"){data_input=apply(data_input,2,function(x) qnorm(x,lower.tail=F))}
+  if(data_type=="p"){data_input=apply(data_input,2,function(x) stats::qnorm(x,lower.tail=F))}
   
 
 
@@ -82,28 +84,28 @@ IMIX_ind=function(data_input, #An n x d data frame or matrix of the summary stat
 
   Q <- 0
   # starting value of expected value of the log likelihood
-  Q[2] <- sum.finite(log(pi1)+log(dnorm(x, mu10, sigma10)*dnorm(y,mu20,sigma20)*dnorm(z,mu30,sigma30))) +
-    sum.finite(log(pi2)+log(dnorm(x, mu11, sigma11)*dnorm(y,mu20,sigma20)*dnorm(z,mu30,sigma30)))+
-    sum.finite(log(pi3)+log(dnorm(x, mu10, sigma10)*dnorm(y,mu21,sigma21)*dnorm(z,mu30,sigma30)))+
-    sum.finite(log(pi4)+log(dnorm(x, mu10, sigma10)*dnorm(y,mu20,sigma20)*dnorm(z,mu31,sigma31)))+
-    sum.finite(log(pi5)+log(dnorm(x, mu11, sigma11)*dnorm(y,mu21,sigma21)*dnorm(z,mu30,sigma30)))+
-    sum.finite(log(pi6)+log(dnorm(x, mu11, sigma11)*dnorm(y,mu20,sigma20)*dnorm(z,mu31,sigma31)))+
-    sum.finite(log(pi7)+log(dnorm(x, mu10, sigma10)*dnorm(y,mu21,sigma21)*dnorm(z,mu31,sigma31)))+
-    sum.finite(log(pi8)+log(dnorm(x, mu11, sigma11)*dnorm(y,mu21,sigma21)*dnorm(z,mu31,sigma31)))
+  Q[2] <- sum.finite(log(pi1)+log(stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu20,sigma20)*stats::dnorm(z,mu30,sigma30))) +
+    sum.finite(log(pi2)+log(stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu20,sigma20)*stats::dnorm(z,mu30,sigma30)))+
+    sum.finite(log(pi3)+log(stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu21,sigma21)*stats::dnorm(z,mu30,sigma30)))+
+    sum.finite(log(pi4)+log(stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu20,sigma20)*stats::dnorm(z,mu31,sigma31)))+
+    sum.finite(log(pi5)+log(stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu21,sigma21)*stats::dnorm(z,mu30,sigma30)))+
+    sum.finite(log(pi6)+log(stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu20,sigma20)*stats::dnorm(z,mu31,sigma31)))+
+    sum.finite(log(pi7)+log(stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu21,sigma21)*stats::dnorm(z,mu31,sigma31)))+
+    sum.finite(log(pi8)+log(stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu21,sigma21)*stats::dnorm(z,mu31,sigma31)))
   if (verbose==TRUE) cat(crayon::yellow(paste0("iter=",1,": loglik=",Q[2],"\n")))
 
   k <- 2
 
   while (abs(Q[k]-Q[k-1])>=tol & k<=maxiter) {
     # E step
-    comp1 <- pi1 * dnorm(x, mu10, sigma10)*dnorm(y,mu20,sigma20)*dnorm(z,mu30,sigma30)
-    comp2 <- pi2 * dnorm(x, mu11, sigma11)*dnorm(y,mu20,sigma20)*dnorm(z,mu30,sigma30)
-    comp3 <- pi3 * dnorm(x, mu10, sigma10)*dnorm(y,mu21,sigma21)*dnorm(z,mu30,sigma30)
-    comp4 <- pi4 * dnorm(x, mu10, sigma10)*dnorm(y,mu20,sigma20)*dnorm(z,mu31,sigma31)
-    comp5 <- pi5 * dnorm(x, mu11, sigma11)*dnorm(y,mu21,sigma21)*dnorm(z,mu30,sigma30)
-    comp6 <- pi6 * dnorm(x, mu11, sigma11)*dnorm(y,mu20,sigma20)*dnorm(z,mu31,sigma31)
-    comp7 <- pi7 * dnorm(x, mu10, sigma10)*dnorm(y,mu21,sigma21)*dnorm(z,mu31,sigma31)
-    comp8 <- pi8 * dnorm(x, mu11, sigma11)*dnorm(y,mu21,sigma21)*dnorm(z,mu31,sigma31)
+    comp1 <- pi1 * stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu20,sigma20)*stats::dnorm(z,mu30,sigma30)
+    comp2 <- pi2 * stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu20,sigma20)*stats::dnorm(z,mu30,sigma30)
+    comp3 <- pi3 * stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu21,sigma21)*stats::dnorm(z,mu30,sigma30)
+    comp4 <- pi4 * stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu20,sigma20)*stats::dnorm(z,mu31,sigma31)
+    comp5 <- pi5 * stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu21,sigma21)*stats::dnorm(z,mu30,sigma30)
+    comp6 <- pi6 * stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu20,sigma20)*stats::dnorm(z,mu31,sigma31)
+    comp7 <- pi7 * stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu21,sigma21)*stats::dnorm(z,mu31,sigma31)
+    comp8 <- pi8 * stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu21,sigma21)*stats::dnorm(z,mu31,sigma31)
 
     comp.sum <- comp1 + comp2+comp3+comp4+comp5+comp6+comp7+comp8
 
@@ -171,10 +173,10 @@ IMIX_ind=function(data_input, #An n x d data frame or matrix of the summary stat
     Q <- 0
 
     # starting value of expected value of the log likelihood
-    Q[2] <- sum.finite(log(pi1)+log(dnorm(x, mu10, sigma10)*dnorm(y,mu20,sigma20))) +
-      sum.finite(log(pi2)+log(dnorm(x, mu11, sigma11)*dnorm(y,mu20,sigma20)))+
-      sum.finite(log(pi3)+log(dnorm(x, mu10, sigma10)*dnorm(y,mu21,sigma21)))+
-      sum.finite(log(pi4)+log(dnorm(x, mu11, sigma11)*dnorm(y,mu21,sigma21)))
+    Q[2] <- sum.finite(log(pi1)+log(stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu20,sigma20))) +
+      sum.finite(log(pi2)+log(stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu20,sigma20)))+
+      sum.finite(log(pi3)+log(stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu21,sigma21)))+
+      sum.finite(log(pi4)+log(stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu21,sigma21)))
 
     if (verbose==TRUE) cat(crayon::yellow(paste0("iter=",1,": loglik=",Q[2],"\n")))
 
@@ -182,10 +184,10 @@ IMIX_ind=function(data_input, #An n x d data frame or matrix of the summary stat
 
     while (abs(Q[k]-Q[k-1])>=tol & k<=maxiter) {
       # E step
-      comp1 <- pi1 * dnorm(x, mu10, sigma10)*dnorm(y,mu20,sigma20)
-      comp2 <- pi2 * dnorm(x, mu11, sigma11)*dnorm(y,mu20,sigma20)
-      comp3 <- pi3 * dnorm(x, mu10, sigma10)*dnorm(y,mu21,sigma21)
-      comp4 <- pi4 * dnorm(x, mu11, sigma11)*dnorm(y,mu21,sigma21)
+      comp1 <- pi1 * stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu20,sigma20)
+      comp2 <- pi2 * stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu20,sigma20)
+      comp3 <- pi3 * stats::dnorm(x, mu10, sigma10)*stats::dnorm(y,mu21,sigma21)
+      comp4 <- pi4 * stats::dnorm(x, mu11, sigma11)*stats::dnorm(y,mu21,sigma21)
 
 
       comp.sum <- comp1 + comp2+comp3+comp4
@@ -227,7 +229,7 @@ IMIX_ind=function(data_input, #An n x d data frame or matrix of the summary stat
     pi_final=c(pi1,pi2,pi3,pi4);mu_final=c(mu10,mu11,mu20,mu21);sigma_final=c(sigma10,sigma11,sigma20,sigma21)
    } else  {cat(crayon::red("Error: Function does not support the number of data types!")); return(1)}
 
-  loglik.approx <- tail(Q, n=1)
+  loglik.approx <- utils::tail(Q, n=1)
   colnames(pred.values)=paste0("component",1:(2^n_data))
   rownames(pred.values)=rownames(data_input)
   if (k>maxiter) cat(crayon::red(paste0("Warning: Exceed maximum iteration k=",maxiter,".\n"))) else cat(crayon::cyan$bold("Successfully Done!\n"))

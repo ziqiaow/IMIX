@@ -33,16 +33,16 @@ plot_component=function(res_select, # Result output from function model_selectio
   df$BIC=as.numeric(as.character(df$BIC))
   
   if(type=="AIC"){
-  p1<-ggplot(df, aes(x=component, y=AIC, group=Model)) +
-    geom_line(aes(color=Model))+
-    geom_point(aes(color=Model)) + theme(legend.position="bottom",plot.title = element_text(size=10))+
-    geom_point(data=df[which.min(df$AIC),], aes(x=component,y=AIC), size=2,shape=17)
+  p1<-ggplot(df, aes_string(x="component", y="AIC", group="Model")) +
+    geom_line(aes_string(color="Model"))+
+    geom_point(aes_string(color="Model")) + theme(legend.position="bottom",plot.title = element_text(size=10))+
+    geom_point(data=df[which.min(df$AIC),], aes_string(x="component", y="AIC"), size=2,shape=17)
   
   } else {
-    p1<-ggplot(df, aes(x=component, y=BIC, group=Model)) +
-      geom_line(aes(color=Model))+
-      geom_point(aes(color=Model)) + theme(legend.position="bottom",plot.title = element_text(size=10))+
-      geom_point(data=df[which.min(df$BIC),], aes(x=component,y=BIC), size=2,shape=17)
+    p1<-ggplot(df, aes_string(x="component", y="BIC", group="Model")) +
+      geom_line(aes_string(color="Model"))+
+      geom_point(aes_string(color="Model")) + theme(legend.position="bottom",plot.title = element_text(size=10))+
+      geom_point(data=df[which.min(df$BIC),], aes_string(x="component", y="BIC"), size=2,shape=17)
     
     
   }

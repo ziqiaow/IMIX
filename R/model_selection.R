@@ -7,6 +7,7 @@
 #' @param d Number of data types
 #' @param modelname The model name, default is IMIX_ind
 #' @return AIC/BIC values of the target model
+#' 
 #' @export
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
@@ -52,9 +53,9 @@ model_selection=function(loglik, #Full log likelihood, result output: `Full MaxL
   }
 
 
-  bic=-2*loglik + nparam*log(n)
-  aic=-2*loglik + nparam*2
-  res=c(aic,bic)
+  BIC=-2*loglik + nparam*log(n)
+  AIC=-2*loglik + nparam*2
+  res=c(AIC,BIC)
   names(res)=c("AIC","BIC")
   return(res)
 }
@@ -80,6 +81,8 @@ model_selection=function(loglik, #Full log likelihood, result output: `Full MaxL
 #' \item{IMIX_ind_unrestrict}{A list of the IMIX_ind_unrestrict for all components 1,2,...2^d, this step was fitted using R package "Mclust", more details of the output can be found there}
 #' \item{IMIX_cor_twostep}{A list of the IMIX_cor_twostep for all components 1,2,...2^d, here, the mean is the estimated value of IMIX_ind_unrestrict}
 #' \item{IMIX_cor}{A list of the IMIX_cor_twostep for all components 1,2,...2^d}
+#' 
+#' @importFrom stats qnorm
 #' @export
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
@@ -103,7 +106,7 @@ model_selection_component=function(data_input, #An n x d data frame or matrix of
                                    ){
   
   data_type <- match.arg(data_type)
-  if(data_type=="p"){data_input=apply(data_input,2,function(x) qnorm(x,lower.tail=F))}
+  if(data_type=="p"){data_input=apply(data_input,2,function(x) stats::qnorm(x,lower.tail=F))}
   
   set.seed(seed)
   cat(crayon::cyan$bold("Start Number of Component Selections!\n"))
@@ -151,12 +154,12 @@ model_selection_component=function(data_input, #An n x d data frame or matrix of
   names(res_list)=c("IMIX_ind_unrestrict","IMIX_cor_twostep","IMIX_cor")
   df = as.data.frame(do.call(rbind, lapply(res_list, unlist)))
   df$AIC=as.numeric(as.character(df$AIC));df$BIC=as.numeric(as.character(df$BIC))
-  best_component_aic=df$component[df$AIC==min(df$AIC)]  
-  best_component_bic=df$component[df$BIC==min(df$BIC)]  
+  best_component_AIC=df$component[df$AIC==min(df$AIC)]  
+  best_component_BIC=df$component[df$BIC==min(df$BIC)]  
   
   cat(crayon::cyan$bold("Done!\n"))
   
-  res=list("Component_Selected_AIC"=best_component_aic,"Component_Selected_BIC"=best_component_bic,"AIC/BIC"=res_list,"IMIX_ind_unrestrict"=test_ind,"IMIX_cor_twostep"=test_fixedmu,"IMIX_cor"=test_cor)
+  res=list("Component_Selected_AIC"=best_component_AIC,"Component_Selected_BIC"=best_component_BIC,"AIC/BIC"=res_list,"IMIX_ind_unrestrict"=test_ind,"IMIX_cor_twostep"=test_fixedmu,"IMIX_cor"=test_cor)
   
   return(res)
 }

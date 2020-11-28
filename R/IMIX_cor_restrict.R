@@ -19,6 +19,8 @@
 #' \item{mu}{Estimated mean for the null and alternative of each data type: for two data types (mu10,mu11,mu20,mu21), three data types (mu10,mu11,mu20,mu21,mu30,mu31), mui0 is the null for data type i, mui1 is the alternative for data type i.}
 #' \item{cov}{A list of estimated variance-covariance matrix of each component}
 #'   
+#' @importFrom stats qnorm
+#' @importFrom utils tail
 #' @export
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
@@ -37,7 +39,7 @@ IMIX_cor_restrict=function(data_input, #An n x d data frame or matrix of the sum
 ){
 
   data_type <- match.arg(data_type)
-  if(data_type=="p"){data_input=apply(data_input,2,function(x) qnorm(x,lower.tail=F))}
+  if(data_type=="p"){data_input=apply(data_input,2,function(x) stats::qnorm(x,lower.tail=F))}
   
 
   n_data=dim(data_input)[2]
@@ -261,7 +263,7 @@ IMIX_cor_restrict=function(data_input, #An n x d data frame or matrix of the sum
 
   } else  {cat(crayon::red("Error: Function does not support the number of data types!")); return(1)}
 
-  loglik.approx <- tail(Q, n=1)
+  loglik.approx <- utils::tail(Q, n=1)
   colnames(pred.values)=paste0("component",1:(2^n_data))
   rownames(pred.values)=rownames(data_input)
   if (k>maxiter) cat(crayon::red(paste0("Warning: Exceed maximum iteration k=",maxiter,".\n"))) else cat(crayon::cyan$bold("Successfully Done!\n"))

@@ -26,12 +26,13 @@
 #'  \item{estimatedFDR}{The estimated marginal FDR value for each component starting from component 2 (component 1 is the global null)}
 #'  \item{alpha}{Prespecified nominal level for the across-data-type FDR control}
 #'  
+#' @importFrom stats qnorm
 #' @export
 #' 
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
 #' 
-#' Benaglia, Tatiana, Didier Chauveau, David R. Hunter, and Derek Young. 2009. “mixtools: An R Package for Analyzing Finite Mixture Models.” Journal of Statistical Software 32 (6): 1–29. \url{http://www.jstatsoft.org/v32/i06/}.
+#' Benaglia, Tatiana, Didier Chauveau, David R. Hunter, and Derek Young. 2009. “mixtools: An R Package for Analyzing Finite Mixture Models.” Journal of Statistical Software 32 (6): 1–29. \url{https://www.jstatsoft.org/v32/i06/}.
 #' @examples 
 #' # First load the data
 #' data("data_p")
@@ -46,11 +47,20 @@
 #' p_ini = p_input,alpha = 0.1,model_selection_method = "AIC")
 #' 
 #' #Results
-#' test1$estimatedFDR # Print the estimated across-data-type FDR for each component
-#' test1$`AIC/BIC` # The AIC and BIC values for each model
-#' test1$`Selected Model` # The best fitted model selected by AIC
-#' str(test1$IMIX_cor_twostep) # The output of IMIX_cor_twostep
-#' dim(test1$significant_genes_with_FDRcontrol) # The output of genes with local FDR values and classified components
+#' # Print the estimated across-data-type FDR for each component
+#' test1$estimatedFDR
+#' 
+#' # The AIC and BIC values for each model
+#' test1$`AIC/BIC` 
+#' 
+#' # The best fitted model selected by AIC
+#' test1$`Selected Model` 
+#' 
+#' # The output of IMIX_cor_twostep
+#' str(test1$IMIX_cor_twostep) 
+#' 
+#' # The output of genes with local FDR values and classified components
+#' dim(test1$significant_genes_with_FDRcontrol)
 #' head(test1$significant_genes_with_FDRcontrol)
 #' 
 IMIX=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
@@ -71,7 +81,7 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
   data_type <- match.arg(data_type)
   if (data_type == "p") {
     data_input = apply(data_input, 2, function(x)
-      qnorm(x, lower.tail = F))
+      stats::qnorm(x, lower.tail = F))
   }
   
   model <- match.arg(model)

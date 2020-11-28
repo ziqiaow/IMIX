@@ -7,6 +7,7 @@
 #' \item{significant_genes_with_FDRcontrol}{The output of each gene ordered by the components based on FDR control and within each component ordered by the local FDR, "localFDR" is 1-posterior probability of each gene in the component based on the maximum posterior probability, "class_withoutFDRcontrol" is the classified component based on maximum posterior probability, "class_FDRcontrol" is the classified component based on the across-data-type FDR control at alpha level}
 #' \item{estimatedFDR}{The estimated marginal FDR value for each component starting from component 2 (component 1 is the global null)}
 #' \item{alpha}{Prespecified nominal level for the across-data-type FDR control}
+#'
 #' @export
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
@@ -24,7 +25,8 @@
 #' # Check the selected model based on AIC value
 #' test1$`Selected Model`
 #' 
-#' # Below is an example for data example 1 in controlling the FDR at 0.2 for component 2 & component 4. 
+#' # Below is an example for data example 1 in controlling 
+#' # the FDR at 0.2 for component 2 & component 4. 
 #' # First calculate the local FDR for component 2 & component 4:
 #' lfdr_ge_combined <- 1 - (test1$IMIX_cor_twostep$`posterior prob`[,2] + 
 #' test1$IMIX_cor_twostep$`posterior prob`[,4])  # Class 2: (ge+,cnv-); class 4: (ge+,cnv+)
@@ -84,6 +86,8 @@ FDR_control_adaptive=function(lfdr, #Local FDR for each gene of the mixture mode
 #' \item{significant_genes_with_FDRcontrol}{The output of each gene ordered by the components based on FDR control and within each component ordered by the local FDR, "localFDR" is 1-posterior probability of each gene in the component based on the maximum posterior probability, "class_withoutFDRcontrol" is the classified component based on maximum posterior probability, "class_FDRcontrol" is the classified component based on the across-data-type FDR control at alpha level}
 #' \item{estimatedFDR}{The estimated marginal FDR value for each component starting from component 2 (component 1 is the global null)}
 #' \item{alpha}{Prespecified nominal level for the across-data-type FDR control}
+#' 
+#' @importFrom MASS mvrnorm
 #' @export
 #' @references
 #' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
