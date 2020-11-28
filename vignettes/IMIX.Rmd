@@ -2,7 +2,17 @@
 title: "A quick start guide to IMIX"
 author: "Ziqiao Wang"
 date: "2020/11/25"
-output: rmarkdown::html_vignette
+output:
+  html_document:
+    number_sections: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 2
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+  rmarkdown::html_vignette: default
 nocite: |
   @*
 bibliography: References.bib
