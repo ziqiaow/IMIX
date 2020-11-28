@@ -13,7 +13,7 @@ Depends:
     R (>= 3.5)
 Imports:
     crayon,mvtnorm,mixtools,mclust,ggplot2,stats,utils,MASS
-Suggests: knitr, rmarkdown
+Suggests: knitr,rmarkdown
 VignetteBuilder: knitr
 URL: https://github.com/ziqiaow/IMIX
 BugReports: https://github.com/ziqiaow/IMIX/issues
