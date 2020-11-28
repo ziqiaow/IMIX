@@ -3,7 +3,7 @@ Type: Package
 Version: 0.1-2
 Date: 2020-11-23
 Title: A Multivariate Mixture Model Approach to Association Analysis Through Multi-Omics Data Integration
-Authors@R: c(person("Ziqiao","Wang",role=c("aut","cre"),email="wzqjanet@gmail.com",comment = c(ORCID = "0000-0003-3383-8670")),person("Peng","Wei",role=c("ths"),email="pwei2@mdanderson.org",comment = c(ORCID = "0000-0001-7758-6116")))
+Authors@R: c(person("Ziqiao","Wang",role=c("aut","cre"),email="wzqjanet@gmail.com",comment = c(ORCID = "0000-0003-3383-8670")),person("Peng","Wei",role=c("aut","ths"),email="pwei2@mdanderson.org",comment = c(ORCID = "0000-0001-7758-6116")))
 Maintainer: Ziqiao Wang <wzqjanet@gmail.com>
 Description: This is an R package based on a multivariate mixture model framework for integrative analysis of multiple types of omics data for association analysis. This package can be implemented for testing whether a disease is associated with genes in multiple genomic data types, such as DNA methylation, copy number variation and gene expression. We use the summary statistics of association test outputs and conduct our test integratively for two or three types of genomics data. IMIX features statistically-principled model selection, global FDR control and computational efficiency. Details are described in Ziqiao Wang and Peng Wei, Bioinformatics (2020). 
 License: GPL-2
