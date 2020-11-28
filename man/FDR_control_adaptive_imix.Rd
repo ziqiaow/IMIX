@@ -27,6 +27,7 @@ The estimated mFDR for the target component and classify the genes in each compo
 The adaptive procedure for across-data-type FDR control based on the output from IMIX models, this can be directly performed by IMIX function, however, if the user is interested in other alpha levels, this function would be useful to avoid rerun the IMIX().
 }
 \examples{
+\dontrun{
 # First generate the data
 library(MASS)
 N <- 1000
@@ -67,7 +68,7 @@ test2 <- IMIX(data_input = data_z,data_type = "z",alpha = 0.05,verbose = TRUE)
 # Adaptive FDR control at alpha 0.2 for IMIX_cor model
 fdr_control2 <- FDR_control_adaptive_imix(imix_output = test2, model = "IMIX_cor", 
 alpha = 0.2) 
-
+}
 }
 \references{
 Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.

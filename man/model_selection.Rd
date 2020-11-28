@@ -31,6 +31,7 @@ AIC/BIC values of the target model
 Model selection for sub-model outputs in IMIX, this step is to calculate the AIC or BIC values for one model
 }
 \examples{
+\dontrun{
 # First load the data
 data("data_p")
 
@@ -46,6 +47,7 @@ p_ini = p_input,alpha = 0.1,model_selection_method = "AIC")
 # Calculate the AIC and BIC values for IMIX_ind with two data types and four components
 model_selection(test1$IMIX_ind$`Full MaxLogLik final`,
 n=dim(test1$IMIX_ind$`posterior prob`)[1],g=4,d=2, "IMIX_ind")
+}
 }
 \references{
 Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.

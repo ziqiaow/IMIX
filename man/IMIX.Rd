@@ -66,6 +66,7 @@ A list of results of IMIX
 Fitting a multivariate mixture model framework, model selection for the best model, and adaptive procedure for FDR control. Input of summary statistics z scores or p values of two or three data types.
 }
 \examples{
+\dontrun{
 # First load the data
 data("data_p")
 
@@ -94,7 +95,7 @@ str(test1$IMIX_cor_twostep)
 # The output of genes with local FDR values and classified components
 dim(test1$significant_genes_with_FDRcontrol)
 head(test1$significant_genes_with_FDRcontrol)
-
+}
 }
 \references{
 Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.

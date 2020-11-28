@@ -39,12 +39,13 @@ Selected number of components based on AIC and BIC
 Model selection for components based on AIC and BIC values for models in IMIX
 }
 \examples{
-
+\dontrun{
 # First load the data
 data("data_p")
 
 # Perform model selections on the data
 select_comp1 = model_selection_component(data_p, data_type = "p", seed = 20)
+}
 }
 \references{
 Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
