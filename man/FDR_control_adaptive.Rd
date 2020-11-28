@@ -34,7 +34,8 @@ p_ini = p_input,alpha = 0.1,model_selection_method = "AIC")
 # Check the selected model based on AIC value
 test1$`Selected Model`
 
-# Below is an example for data example 1 in controlling the FDR at 0.2 for component 2 & component 4. 
+# Below is an example for data example 1 in controlling 
+# the FDR at 0.2 for component 2 & component 4. 
 # First calculate the local FDR for component 2 & component 4:
 lfdr_ge_combined <- 1 - (test1$IMIX_cor_twostep$`posterior prob`[,2] + 
 test1$IMIX_cor_twostep$`posterior prob`[,4])  # Class 2: (ge+,cnv-); class 4: (ge+,cnv+)
