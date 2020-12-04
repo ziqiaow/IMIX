@@ -18,7 +18,7 @@ Plot for the model selection of components
 Plot the result output of model selection for components based on AIC and BIC values in IMIX
 }
 \examples{
-\dontrun{
+\donttest{
 # First load the data
 data("data_p")
 
@@ -30,5 +30,5 @@ plot_component(select_comp1, type = "BIC")
 }
 }
 \references{
-Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
+Ziqiao Wang and Peng Wei. 2020. “IMIX: a multivariate mixture model approach to association analysis through multi-omics data integration.” Bioinformatics. \url{https://doi.org/10.1093/bioinformatics/btaa1001}.
 }

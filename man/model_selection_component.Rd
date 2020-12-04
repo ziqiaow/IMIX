@@ -39,7 +39,13 @@ Selected number of components based on AIC and BIC
 Model selection for components based on AIC and BIC values for models in IMIX
 }
 \examples{
-\dontrun{
+# A toy example
+data("data_p")
+set.seed(10)
+data <- data_p[sample(1:1000,20,replace = FALSE),]
+select_comp0 <- model_selection_component(data, data_type = "p", seed = 20)
+
+\donttest{
 # First load the data
 data("data_p")
 
@@ -48,7 +54,6 @@ select_comp1 = model_selection_component(data_p, data_type = "p", seed = 20)
 }
 }
 \references{
-Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
-
-Scrucca, Luca, Michael Fop, T. Brendan Murphy, and Adrian E. Raftery. 2016. “mclust 5: Clustering, Classification and Density Estimation Using Gaussian Finite Mixture Models.” The R Journal 8 (1): 289–317. \url{https://doi.org/10.32614/RJ-2016-021}.
+Ziqiao Wang and Peng Wei. 2020. “IMIX: a multivariate mixture model approach to association analysis through multi-omics data integration.” Bioinformatics. \url{https://doi.org/10.1093/bioinformatics/btaa1001}.
+Luca Scrucca, Michael Fop, T. Brendan Murphy, and Adrian E. Raftery. 2016. “mclust 5: Clustering, Classification and Density Estimation Using Gaussian Finite Mixture Models.” The R Journal 8 (1): 289–317. \url{https://doi.org/10.32614/RJ-2016-021}.
 }

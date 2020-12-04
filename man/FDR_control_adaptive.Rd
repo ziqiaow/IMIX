@@ -21,7 +21,7 @@ The estimated mFDR for the target component or component combinaitons and whethe
 The adaptive procedure for across-data-type FDR control based on the output from IMIX models, this can be directly performed by IMIX function, however, if the user is interested in other mixture models, alpha level or combinations of components, this function would be useful.
 }
 \examples{
-\dontrun{
+\donttest{
 # First load the data
 data("data_p")
 
@@ -47,5 +47,5 @@ fdr_control1 <- FDR_control_adaptive(lfdr = lfdr_ge_combined, alpha = 0.2)
 }
 }
 \references{
-Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
+Ziqiao Wang and Peng Wei. 2020. “IMIX: a multivariate mixture model approach to association analysis through multi-omics data integration.” Bioinformatics. \url{https://doi.org/10.1093/bioinformatics/btaa1001}.
 }
