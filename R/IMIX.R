@@ -30,11 +30,23 @@
 #' @export
 #' 
 #' @references
-#' Wang, Ziqiao, and Peng Wei. 2020. “IMIX: A Multivariate Mixture Model Approach to Integrative Analysis of Multiple Types of Omics Data.” BioRxiv. Cold Spring Harbor Laboratory. \url{https://doi.org/10.1101/2020.06.23.167312}.
+#' Ziqiao Wang and Peng Wei. 2020. “IMIX: a multivariate mixture model approach to association analysis through multi-omics data integration.” Bioinformatics. \url{https://doi.org/10.1093/bioinformatics/btaa1001}.
 #' 
-#' Benaglia, Tatiana, Didier Chauveau, David R. Hunter, and Derek Young. 2009. “mixtools: An R Package for Analyzing Finite Mixture Models.” Journal of Statistical Software 32 (6): 1–29. \url{https://www.jstatsoft.org/v32/i06/}.
+#' Tatiana Benaglia, Didier Chauveau, David R. Hunter, and Derek Young. 2009. “mixtools: An R Package for Analyzing Finite Mixture Models.” Journal of Statistical Software 32 (6): 1–29. \url{https://www.jstatsoft.org/v32/i06/}.
 #' @examples 
-#' \dontrun{
+#' # A toy example
+#' data("data_p")
+#' set.seed(10)
+#' data <- data_p[sample(1:1000,200,replace = FALSE),]
+#' mu_input <- c(0,3,0,3)
+#' sigma_input <- rep(1,4)
+#' p_input <- rep(0.5,4)
+#' test <- IMIX(data_input = data,data_type = "p",mu_ini = mu_input,sigma_ini = sigma_input,
+#'              p_ini = p_input,alpha = 0.1,model_selection_method = "BIC",
+#'              sort_label = FALSE,model = "IMIX_ind")
+#'
+#' \donttest{
+#' # The details of this example can be found in Github vignette
 #' # First load the data
 #' data("data_p")
 #' 
@@ -77,7 +89,7 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
               model_selection_method=c("BIC","AIC"), #Model selection information criteria, based on AIC or BIC, default is BIC
               alpha=0.2, #Prespecified nominal level for global FDR control, default is 0.2
               verbose=FALSE, #Whether to print the full log-likelihood for each iteration, default is FALSE
-              sort_label=TRUE #Whether to sort the component labels in case component labels switched after convergence of the initial values, default is TRUE, notice that if the users chooose not to, they might need to check the interested IMIX model for the converged mean for the true component labels and perform the adaptive FDR control separately for an acurate result
+              sort_label=TRUE #Whether to sort the component labels in case component labels switched after convergence of the initial values, default is TRUE, notice that if the users chooose not to, they might need to check the interested IMIX model for the converged mean for the true component labels and perform the adaptive FDR control separately for an acurate result; this sorting fucntion only applies for model=="all" option, for all other models, users need to check the label order manually.
 ){
   data_type <- match.arg(data_type)
   if (data_type == "p") {
