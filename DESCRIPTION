@@ -1,10 +1,10 @@
 Package: IMIX
 Type: Package
-Version: 0.1-2
+Version: 1.1.0
 Date: 2020-11-23
-Title: A Multivariate Mixture Model Approach to Association Analysis Through Multi-Omics Data Integration
+Title: Gaussian Mixture Model for Multi-Omics Data Integration
 Authors@R: c(person("Ziqiao","Wang",role=c("aut","cre"),email="wzqjanet@gmail.com",comment = c(ORCID = "0000-0003-3383-8670")),person("Peng","Wei",role=c("ths"),email="pwei2@mdanderson.org",comment = c(ORCID = "0000-0001-7758-6116")))
-Description: This is an R package based on a multivariate mixture model framework for integrative analysis of multiple types of omics data for association analysis. This package can be implemented for testing whether a disease is associated with genes in multiple genomic data types, such as DNA methylation, copy number variation and gene expression. We use the summary statistics of association test outputs and conduct our test integratively for two or three types of genomics data. IMIX features statistically-principled model selection, global FDR control and computational efficiency. Details are described in Ziqiao Wang and Peng Wei, Bioinformatics (2020). 
+Description: A multivariate Gaussian mixture model framework to integrate multiple types of genomic data and allow modeling of inter-data-type correlations for association analysis. 'IMIX' can be implemented to test whether a disease is associated with genes in multiple genomic data types, such as DNA methylation, copy number variation, gene expression, etc. It can also study the integration of multiple pathways. 'IMIX' uses the summary statistics of association test outputs and conduct integration analysis for two or three types of genomics data. 'IMIX' features statistically-principled model selection, global FDR control and computational efficiency. Details are described in Ziqiao Wang and Peng Wei (2020) <doi:10.1093/bioinformatics/btaa1001>. 
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
@@ -12,8 +12,6 @@ Depends:
     R (>= 3.5)
 Imports:
     crayon,mvtnorm,mixtools,mclust,ggplot2,stats,utils,MASS
-Suggests: knitr,rmarkdown
-VignetteBuilder: knitr
 URL: https://github.com/ziqiaow/IMIX
 BugReports: https://github.com/ziqiaow/IMIX/issues
 RoxygenNote: 7.1.1
