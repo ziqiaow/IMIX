@@ -114,15 +114,22 @@ model_selection_component=function(data_input, #An n x d data frame or matrix of
                                    verbose=FALSE #Whether to print the full log-likelihood for each iteration, default is FALSE
                                    ){
   
+  
   data_type <- match.arg(data_type)
-  if(data_type=="p"){data_input=apply(data_input,2,function(x) stats::qnorm(x,lower.tail=F))}
+  if (data_type == "p") {
+    if(any(data_input==0 | data_input==1)){cat(crayon::red("Warning: p-value contains 0 or 1!"))}
+    data_input[data_input==1]=0.99999
+    data_input[data_input==0]=0.00001
+    data_input = apply(data_input, 2, function(x)
+      stats::qnorm(x, lower.tail = F))
+  }
   
   set.seed(seed)
   cat(crayon::cyan$bold("Start Number of Component Selections!\n"))
   
-  test_ind=list()
-  test_fixedmu=list()
-  test_cor=list() 
+  test_ind=vector(mode = "list", length = 2^dim(data_input)[2])
+  test_fixedmu=vector(mode = "list", length = 2^dim(data_input)[2])
+  test_cor=vector(mode = "list", length = 2^dim(data_input)[2])
   
   
   for(i in 1:(2^dim(data_input)[2])){
@@ -132,18 +139,21 @@ model_selection_component=function(data_input, #An n x d data frame or matrix of
       cat(crayon::cyan$bold(paste0("Test for ",i," Components!\n")))
     }
     
-    test_ind[[i]]=mclust::Mclust(data_input,modelNames = "VVI",G=i)
-    mu_vec_ind=list()
-    for (j in 1:i){
-      mu_vec_ind[[j]]=as.numeric(test_ind[[i]]$parameters$mean[,j])
+    test_ind[i]=list(mclust::Mclust(data_input,modelNames = "VVI",G=i))
+    if(length(test_ind[[i]])==0){test_fixedmu[i]=list(NULL)
+    test_cor[i]=list(NULL)
+    } else {
+      mu_vec_ind=list()
+      for (j in 1:i){
+        mu_vec_ind[[j]]=as.numeric(test_ind[[i]]$parameters$mean[,j])
+      }
+      cov=lapply(seq(dim(test_ind[[i]]$parameters$variance$sigma)[3]),function(x) test_ind[[i]]$parameters$variance$sigma[,,x])
+      
+      test_fixedmu[[i]]=IMIX_cor_twostep(data_input=data_input,data_type="z",g=i,mu_vec=mu_vec_ind,cov=cov,p=test_ind[[i]]$parameters$pro,seed=seed,tol=tol,maxiter=maxiter,verbose = verbose)
+      test_cor[[i]]=IMIX_cor(data_input=data_input,data_type="z",g=i,mu_vec=mu_vec_ind,cov=cov,p=test_ind[[i]]$parameters$pro,seed=seed,tol=tol,maxiter=maxiter,verbose = verbose)
     }
-    cov=lapply(seq(dim(test_ind[[i]]$parameters$variance$sigma)[3]),function(x) test_ind[[i]]$parameters$variance$sigma[,,x])
     
-    test_fixedmu[[i]]=IMIX_cor_twostep(data_input=data_input,data_type="z",g=i,mu_vec=mu_vec_ind,cov=cov,p=test_ind[[i]]$parameters$pro,seed=seed,tol=tol,maxiter=maxiter,verbose = verbose)
-    test_cor[[i]]=IMIX_cor(data_input=data_input,data_type="z",g=i,mu_vec=mu_vec_ind,cov=cov,p=test_ind[[i]]$parameters$pro,seed=seed,tol=tol,maxiter=maxiter,verbose = verbose)
   }
-  
-  
   
   
   res_test_ind=array(0,c((2^dim(data_input)[2]),3))
@@ -152,10 +162,14 @@ model_selection_component=function(data_input, #An n x d data frame or matrix of
   res_test_ind[,1]=res_test_fixedmu[,1]=res_test_cor[,1]=paste0("component",1:(2^dim(data_input)[2]))
   colnames(res_test_ind)=colnames(res_test_fixedmu)=colnames(res_test_cor)=c("component","AIC","BIC")
   for(i in 1:(2^dim(data_input)[2])){
-    res_test_ind[i,2:3]=model_selection(test_ind[[i]]$loglik,dim(data_input)[1],g=i,modelname="IMIX_ind_unrestrict")
-    res_test_fixedmu[i,2:3]=model_selection(test_fixedmu[[i]]$`Full MaxLogLik final`,dim(data_input)[1],g=test_fixedmu[[i]]$g,modelname="IMIX_cor_twostep")
-    res_test_cor[i,2:3]=model_selection(test_cor[[i]]$`Full MaxLogLik final`,dim(data_input)[1],g=test_cor[[i]]$g,modelname="IMIX_cor")
-    
+    if(length(test_ind[[i]])==0){res_test_ind[i,2:3]=NA
+    res_test_fixedmu[i,2:3]=NA
+    res_test_cor[i,2:3]=NA
+    } else {
+      res_test_ind[i,2:3]=model_selection(test_ind[[i]]$loglik,dim(data_input)[1],g=i,modelname="IMIX_ind_unrestrict")
+      res_test_fixedmu[i,2:3]=model_selection(test_fixedmu[[i]]$`Full MaxLogLik final`,dim(data_input)[1],g=test_fixedmu[[i]]$g,modelname="IMIX_cor_twostep")
+      res_test_cor[i,2:3]=model_selection(test_cor[[i]]$`Full MaxLogLik final`,dim(data_input)[1],g=test_cor[[i]]$g,modelname="IMIX_cor")
+    }
   }
   
   
@@ -163,8 +177,8 @@ model_selection_component=function(data_input, #An n x d data frame or matrix of
   names(res_list)=c("IMIX_ind_unrestrict","IMIX_cor_twostep","IMIX_cor")
   df = as.data.frame(do.call(rbind, lapply(res_list, unlist)))
   df$AIC=as.numeric(as.character(df$AIC));df$BIC=as.numeric(as.character(df$BIC))
-  best_component_AIC=df$component[df$AIC==min(df$AIC)]  
-  best_component_BIC=df$component[df$BIC==min(df$BIC)]  
+  best_component_AIC=df$component[which(df$AIC==min(df$AIC,na.rm = T))]  
+  best_component_BIC=df$component[which(df$BIC==min(df$BIC,na.rm = T))]  
   
   cat(crayon::cyan$bold("Done!\n"))
   

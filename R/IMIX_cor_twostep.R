@@ -40,7 +40,13 @@ IMIX_cor_twostep=function(data_input, #An n x d data frame or matrix of the summ
 ){
  
   data_type <- match.arg(data_type)
-  if(data_type=="p"){data_input=apply(data_input,2,function(x) stats::qnorm(x,lower.tail=F))}
+  if (data_type == "p") {
+    if(any(data_input==0 | data_input==1)){cat(crayon::red("Warning: p-value contains 0 or 1!"))}
+    data_input[data_input==1]=0.99999
+    data_input[data_input==0]=0.00001
+    data_input = apply(data_input, 2, function(x)
+      stats::qnorm(x, lower.tail = F))
+  }
   
   n_data=dim(data_input)[2]
   if(length(cov)!=g | length(mu_vec)!=g | length(mu_vec[[1]])!=n_data | dim(cov[[1]])[1]!=n_data | dim(cov[[1]])[2]!=n_data | length(p)!=g | g>(2^n_data) ) {cat(crayon::red("Error: The dimensions of initial values don't match with each other!")); return(1)}

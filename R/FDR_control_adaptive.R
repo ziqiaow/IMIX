@@ -42,16 +42,14 @@
 FDR_control_adaptive=function(lfdr, #Local FDR for each gene of the mixture model results for one component or a combination of components
                               alpha #Prespecified FDR control level
                               ){
-
   m = length(lfdr)
   if (is.null(names(lfdr)) == TRUE) {
     names(lfdr) = paste0("gene", 1:m)
   }
-  
   lfdr_ordered = lfdr[order(lfdr)]
   sum_lfdr = 0
   i = 1
-  while (sum_lfdr[i] <= alpha) {
+  while (sum_lfdr[i] <= alpha & i < (m+1) ) {
     i = i + 1
     sum_lfdr[i] = mean(lfdr_ordered[1:(i - 1)])
   }
@@ -59,18 +57,16 @@ FDR_control_adaptive=function(lfdr, #Local FDR for each gene of the mixture mode
   if (k == 0) {
     mFDR = 0
     name_rej = NA
-    
   } else {
     mFDR = sum_lfdr[k + 1]
     name_rej = names(lfdr_ordered)[1:k]
   }
-  
   pred_group = rep(0, m)
   pred_group[match(name_rej, names(lfdr))] = 1
   names(pred_group) = names(lfdr)
-  res = list("significant_genes_with_FDRcontrol" = pred_group, "estimatedFDR" = mFDR, "alpha" = alpha)
+  res = list(significant_genes_with_FDRcontrol = pred_group, 
+             estimatedFDR = mFDR, alpha = alpha)
   return(res)
-  
 }
 
 

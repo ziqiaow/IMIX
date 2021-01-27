@@ -93,6 +93,9 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
 ){
   data_type <- match.arg(data_type)
   if (data_type == "p") {
+    if(any(data_input==0 | data_input==1)){cat(crayon::red("Warning: p-value contains 0 or 1!"))}
+    data_input[data_input==1]=0.99999
+    data_input[data_input==0]=0.00001
     data_input = apply(data_input, 2, function(x)
       stats::qnorm(x, lower.tail = F))
   }
@@ -545,7 +548,8 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
   #########################################
   #In case the component labels switched after convergence of the initial values, we need to sort the labels
   
-  if(sort_label==TRUE){
+  if(sort_label==TRUE & model=="all"){
+    cat(crayon::cyan$bold("Start Label Sorting!\n"))
     if(dim(data_input)[2] == 2){
       
       mu_tmp=matrix(unlist(IMIX_cor_twostep_output$mu), nrow = 4, byrow = TRUE)
@@ -655,7 +659,7 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
     
     
     
-  }
+  } else {cat(crayon::red("Warning: No label sorting, need to identify the output groups!\n"))}
   
   
   class_before_controlFDR = apply(best_model$`posterior prob`, 1, which.max)
