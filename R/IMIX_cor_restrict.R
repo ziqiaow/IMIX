@@ -40,7 +40,7 @@ IMIX_cor_restrict=function(data_input, #An n x d data frame or matrix of the sum
   
   data_type <- match.arg(data_type)
   if (data_type == "p") {
-    if(any(data_input==0 | data_input==1)){cat(crayon::red("Warning: p-value contains 0 or 1!"))}
+    if(any(data_input==0 | data_input==1)){cat(crayon::red("Warning: p-value contains 0 or 1!\n"))}
     data_input[data_input==1]=0.99999
     data_input[data_input==0]=0.00001
     data_input = apply(data_input, 2, function(x)
