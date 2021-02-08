@@ -25,7 +25,7 @@
 #' @importFrom utils tail
 #' @export
 #' @references
-#' Ziqiao Wang and Peng Wei. 2020. “IMIX: a multivariate mixture model approach to association analysis through multi-omics data integration.” Bioinformatics. \url{https://doi.org/10.1093/bioinformatics/btaa1001}.
+#' Ziqiao Wang and Peng Wei. 2020. “IMIX: a multivariate mixture model approach to association analysis through multi-omics data integration.” Bioinformatics. <doi:10.1093/bioinformatics/btaa1001>.
 
 
 IMIX_cor=function(data_input, #An n x d data frame or matrix of the summary statistics z score or p value, n is the nubmer of genes, d is the number of data types. Each row is a gene, each column is a data type.
@@ -63,19 +63,19 @@ IMIX_cor=function(data_input, #An n x d data frame or matrix of the summary stat
 
   cat(crayon::cyan$bold("Start IMIX-cor model procedure!\n"))
   # modified sum only considers finite values
-  # sum.finite <- function(x) {
-  #    sum(x[is.finite(x)])
-  #  }
+   sum.finite <- function(x) {
+      sum(x[is.finite(x)])
+    }
   N=dim(data_input)[1]
   Q <- 0
 
   i=1
   if(g==1){
-    Q[2] <- sum(log(p[i])+log(mvtnorm::dmvnorm(data_input, mu_vec[[i]], cov[[i]])))
+    Q[2] <- sum.finite(log(p[i])+log(mvtnorm::dmvnorm(data_input, mu_vec[[i]], cov[[i]])))
   } else {
-    Q[2] <- sum(log(p[i])+log(mvtnorm::dmvnorm(data_input, mu_vec[[i]], cov[[i]])))
+    Q[2] <- sum.finite(log(p[i])+log(mvtnorm::dmvnorm(data_input, mu_vec[[i]], cov[[i]])))
     for(i in 2:g){
-      Q[2] <- Q[2] + sum(log(p[i])+log(mvtnorm::dmvnorm(data_input, mu_vec[[i]], cov[[i]])))
+      Q[2] <- Q[2] + sum.finite(log(p[i])+log(mvtnorm::dmvnorm(data_input, mu_vec[[i]], cov[[i]])))
 
     }
   }
@@ -91,7 +91,7 @@ IMIX_cor=function(data_input, #An n x d data frame or matrix of the summary stat
       comp[i,] <- p[i] * mvtnorm::dmvnorm(data_input, mu_vec[[i]], cov[[i]])
     }
 
-    comp.sum <- apply(comp,2,sum)
+    comp.sum <- apply(comp,2,sum.finite)
 
     proportion <- apply(comp,1, function(x) x / comp.sum)
 
@@ -99,21 +99,21 @@ IMIX_cor=function(data_input, #An n x d data frame or matrix of the summary stat
     p=0
 
     for(i in 1:g){
-      p[i] <- sum(proportion[,i]) / dim(data_input)[1]
+      p[i] <- sum.finite(proportion[,i]) / dim(data_input)[1]
     }
 
     mu=list()
     for(i in 1:g){
-      mu[[i]] <- apply(proportion[,i] * data_input,2,sum) / sum(proportion[,i])
+      mu[[i]] <- apply(proportion[,i] * data_input,2,sum.finite) / sum.finite(proportion[,i])
     }
 
     cov=list()
     for(i in 1:g){
-      cov[[i]] <- matrix( apply(data_input,1, function(a) as.matrix(as.vector(a) - mu[[i]]) %*%  as.matrix(t(as.vector(a) - mu[[i]]))) %*% proportion[,i] ,nrow=dim(data_input)[2]) / sum(proportion[,i])
+      cov[[i]] <- matrix( apply(data_input,1, function(a) as.matrix(as.vector(a) - mu[[i]]) %*%  as.matrix(t(as.vector(a) - mu[[i]]))) %*% proportion[,i] ,nrow=dim(data_input)[2]) / sum.finite(proportion[,i])
     }
 
     k <- k + 1
-    Q[k] <- sum(log(comp.sum))
+    Q[k] <- sum.finite(log(comp.sum))
     if (verbose==TRUE) cat(crayon::yellow(paste0("iter=",k-1,": loglik=",Q[k],"\n")))
 
   }

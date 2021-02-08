@@ -53,5 +53,5 @@ A list of the results of IMIX-cor-twostep
 Fitting a correlated multivariate mixture model with fixed mean from estimated parameters of IMIX-ind. Input of summary statistics z scores or p values of two or three data types.
 }
 \references{
-Ziqiao Wang and Peng Wei. 2020. “IMIX: a multivariate mixture model approach to association analysis through multi-omics data integration.” Bioinformatics. \url{https://doi.org/10.1093/bioinformatics/btaa1001}.
+Ziqiao Wang and Peng Wei. 2020. “IMIX: a multivariate mixture model approach to association analysis through multi-omics data integration.” Bioinformatics. <doi:10.1093/bioinformatics/btaa1001>.
 }
