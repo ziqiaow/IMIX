@@ -1,7 +1,7 @@
 Package: IMIX
 Type: Package
-Version: 1.1.4
-Date: 2021-02-08
+Version: 1.1.5
+Date: 2022-07-13
 Title: Gaussian Mixture Model for Multi-Omics Data Integration
 Authors@R: c(person("Ziqiao","Wang",role=c("aut","cre"),email="wzqjanet@gmail.com",comment = c(ORCID = "0000-0003-3383-8670")),person("Peng","Wei",role=c("ths"),email="pwei2@mdanderson.org",comment = c(ORCID = "0000-0001-7758-6116")))
 Description: A multivariate Gaussian mixture model framework to integrate multiple types of genomic data and allow modeling of inter-data-type correlations for association analysis. 'IMIX' can be implemented to test whether a disease is associated with genes in multiple genomic data types, such as DNA methylation, copy number variation, gene expression, etc. It can also study the integration of multiple pathways. 'IMIX' uses the summary statistics of association test outputs and conduct integration analysis for two or three types of genomics data. 'IMIX' features statistically-principled model selection, global FDR control and computational efficiency. Details are described in Ziqiao Wang and Peng Wei (2020) <doi:10.1093/bioinformatics/btaa1001>. 
@@ -14,7 +14,9 @@ URL: https://github.com/ziqiaow/IMIX
 BugReports: https://github.com/ziqiaow/IMIX/issues
 RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2021-02-08 17:35:35 UTC; wangyuefei
+Packaged: 2021-02-08 17:55:05 UTC; zwang21
 Author: Ziqiao Wang [aut, cre] (<https://orcid.org/0000-0003-3383-8670>),
   Peng Wei [ths] (<https://orcid.org/0000-0001-7758-6116>)
 Maintainer: Ziqiao Wang <wzqjanet@gmail.com>
+Repository: CRAN
+Date/Publication: 2021-02-10 14:40:11 UTC
