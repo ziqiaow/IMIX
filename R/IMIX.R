@@ -483,6 +483,13 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
   }
   
   
+  
+  if( (model == "all" | model == "IMIX_cor_restrict") & (is.null(IMIX_cor_restrict_output$`Full MaxLogLik final`) == TRUE)) { 
+    IMIX_cor_restrict_output <- IMIX_ind_output
+    cat(crayon::red("Warning: IMIX_cor_restrict did not converge. \nAssign IMIX_ind results to IMIX_cor_restrict. \nThe AIC/BIC values for IMIX_cor_restrict are not reliable and should not be used!\n"))
+  }
+  
+  
   #########################################
   #Use AIC or BIC to select the best model
   #########################################
@@ -521,24 +528,58 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
       best_model_name = names(best_model)[id]
       best_model = best_model[[id]]
     }
-    
-    
   } else if (model == "IMIX_cor") {
     best_model = IMIX_cor_output
     best_model_name = "IMIX_cor"
-    model_selection_res = NULL
+    model_selection_res = array(0, c(1, 2))
+    model_selection_res[1, ] = model_selection(
+    best_model$`Full MaxLogLik final`,
+    n = dim(data_input)[1],
+    g = g,
+    d = dim(data_input)[2],
+    modelname = "IMIX_cor"
+    )
+  rownames(model_selection_res) = "IMIX_cor"
+  colnames(model_selection_res) = c("AIC", "BIC")
   } else if (model == "IMIX_cor_twostep") {
     best_model = IMIX_cor_twostep_output
     best_model_name = "IMIX_cor_twostep"
-    model_selection_res = NULL
+    model_selection_res = array(0, c(1, 2))
+    model_selection_res[1, ] = model_selection(
+      best_model$`Full MaxLogLik final`,
+      n = dim(data_input)[1],
+      g = g,
+      d = dim(data_input)[2],
+      modelname = "IMIX_cor_twostep"
+    )
+    rownames(model_selection_res) = "IMIX_cor_twostep"
+    colnames(model_selection_res) = c("AIC", "BIC")
   } else if (model == "IMIX_cor_restrict") {
     best_model = IMIX_cor_restrict_output
     best_model_name = "IMIX_cor_restrict"
-    model_selection_res = NULL
+    model_selection_res = array(0, c(1, 2))
+    model_selection_res[1, ] = model_selection(
+      best_model$`Full MaxLogLik final`,
+      n = dim(data_input)[1],
+      g = g,
+      d = dim(data_input)[2],
+      modelname = "IMIX_cor_restrict"
+    )
+    rownames(model_selection_res) = "IMIX_cor_restrict"
+    colnames(model_selection_res) = c("AIC", "BIC")
   } else {
     best_model = IMIX_ind_output
     best_model_name = "IMIX_ind"
-    model_selection_res = NULL
+    model_selection_res = array(0, c(1, 2))
+    model_selection_res[1, ] = model_selection(
+      best_model$`Full MaxLogLik final`,
+      n = dim(data_input)[1],
+      g = g,
+      d = dim(data_input)[2],
+      modelname = "IMIX_ind"
+    )
+    rownames(model_selection_res) = "IMIX_ind"
+    colnames(model_selection_res) = c("AIC", "BIC")
   }
   
   
@@ -699,7 +740,7 @@ IMIX=function(data_input, #An n x d data frame or matrix of the summary statisti
   
   sig_genes_all = data.frame(sig_genes_all)
   sig_genes_all = sig_genes_all[order(-sig_genes_all$class_FDRcontrol, sig_genes_all$localFDR), ]
-  
+
   cat(crayon::cyan$bold("Finished!\n"))
   res = list(
     "IMIX_ind" = IMIX_ind_output,
