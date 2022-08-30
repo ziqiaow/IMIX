@@ -3,7 +3,7 @@ R package for integrative genomics analysis using a multivariate mixture model f
 
 **Reference**
 
-* Ziqiao Wang and Peng Wei. IMIX: A multivariate mixture model approach to integrative analysis of multiple types of omics data. bioRxiv 2020.06.23.167312; doi: https://doi.org/10.1101/2020.06.23.167312
+* Ziqiao Wang and Peng Wei. IMIX: A multivariate mixture model approach to integrative analysis of multiple types of omics data. Bioinformatics. 2021 Apr 1;36(22-23):5439-5447. doi: 10.1093/bioinformatics/btaa1001. PMID: 33258948; PMCID: PMC8016490.
 
 ### Installation
 Install the IMIX package via github
