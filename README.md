@@ -1,5 +1,5 @@
 # IMIX
-R package for integrative genomics analysis using a multivariate mixture model framework.
+R package for integrative genomics analysis using a multivariate mixture model framework. This package is also available in R/Cran: https://cran.rstudio.com/web/packages/IMIX/index.html.
 
 **Reference**
 
