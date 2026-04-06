@@ -1,0 +1,7 @@
+citHeader("To cite IMIX in publications use:")
+
+bibentry(bibtype = "Article",
+         title = "IMIX: A multivariate mixture model approach to integrative analysis of multiple types of omics data. Bioinformatics",
+         author = "Ziqiao Wang, Peng Wei",
+         year = "2021", journal = "Bioinformatics",
+         doi = "10.1093/bioinformatics/btaa1001")
